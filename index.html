@@ -1,0 +1,489 @@
+<!DOCTYPE html PUBLIC>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>KYWY - Retro Gaming and Development Platform</title>
+    <meta name="description"
+        content="KYWY - The compact gaming system that revives retro gaming and endless development potential. Immerse yourself in an open ecosystem that fuels creativity and fun.">
+    <meta name="author" content="Ethan Lannan">
+    <!-- Canonical Link -->
+    <link rel="canonical" href="http://www.kywy.io/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://www.kywy.io/">
+    <meta property="og:title" content="KYWY - Retro Gaming and Development Platform">
+    <meta property="og:description"
+        content="KYWY - The compact gaming system that revives retro gaming and endless development potential. Immerse yourself in an open ecosystem that fuels creativity and fun..">
+    <meta property="og:image" content="https://koinslotkywy.com/images/KywyIntroFrame.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="http://www.kywy.io/">
+    <meta property="twitter:title" content="KYWY - Retro Gaming and Development Platform">
+    <meta property="twitter:description"
+        content="KYWY - The compact gaming system that revives retro gaming and endless development potential. Immerse yourself in an open ecosystem that fuels creativity and fun.">
+    <meta property="twitter:image" content="https://koinslotkywy.com/images/KywyIntroFrame.png">
+
+    <!-- Schema.org markupKYWY - The compact gaming system that revives retro gaming and endless development potential. Immerse yourself in an open ecosystem that fuels creativity and fun. for Google+ -->
+    <meta itemprop="name" content="KYWY - Retro Gaming and Development Platform">
+    <meta itemprop="description"
+        content="KYWY - The compact gaming system that revives retro gaming and endless development potential. Immerse yourself in an open ecosystem that fuels creativity and fun..">
+    <meta itemprop="image" content="https://koinslotkywy.com/images/KywyIntroFrame.png">
+
+    <link rel="icon" href="images/logo_image.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="kywy.css" />
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <link rel="stylesheet/less" type="text/css" href="kywy.less" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Silkscreen&display=swap">
+    <link rel="stylesheet" href="https://unpkg.com/98.css@0.1.4/build/98.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="three.min.js"></script>
+    <script src="OrbitControls.js"></script>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6YL05V08Y7"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-6YL05V08Y7');
+    </script>
+
+</head>
+
+<!------------------------------------------- HEADER ------------------------------------------------------------->
+<!-- splash screen -->
+<div class="splash">
+    <div class="loading">
+        <img src="./images/loading.gif" alt="KYWY loading animation">
+    </div>
+</div>
+
+<!-- Splash screen end-->
+
+
+<!-- header -->
+
+<body scroll="no" style="overflow: hidden" onload="startTime()">
+    <div class="header">
+        <div class="kywy_header_text">
+            <h1 style="font-size: 20px; color: rgb(255, 255, 255); text-shadow:
+            -1px -2px 0 #000,  
+             1px -2px 0 #000,
+            -1px  2px 0 #000,
+             1px  2px 0 #000; display: flex; align-items: center;">
+                <img src="./images/KywyHeaderImage.png" alt="KYWY header logo" style="margin-right: 10px;">
+                KYWY - home
+            </h1>
+        </div>
+    </div>
+</body>
+<!-- Header End -->
+
+<!-- Welcome window-->
+<div class=" window active drag res" id="welcome">
+    <div class="title-bar">
+        <div class="title-bar-text">
+            Welcome!
+        </div>
+        <div class="title-bar-controls">
+            <button aria-label="Close" id="welcomeclose"></button>
+        </div>
+    </div>
+    <div class="window-body">
+
+        <p><b>KYWY</b></b> </p>
+
+        <b>Retro Gaming & Development Platform</b><br>
+        <b><br>
+            <div class="kywyarticleimage">
+                <img id="welcomeimg1" src="images/kywysiderender3.png" alt="KYWY gaming system render">
+            </div>
+            <br><b>KYWY - The compact retro handheld with endless development potential.
+                Immerse yourself in an open ecosystem that fuels creativity and fun.</b>
+            <br>
+            <br>
+            <b>All day battery life, rp2040 chipset, USB-C, Micro SD Storage, and expandability. </b>
+            <br>
+            <br>
+                        <button type="button" onclick="window.open('https://koinslot.myshopify.com')"
+                style="font-size: large; font-weight: bold;">Pre-Order Now!</button>
+            <br>
+           <br>
+            <button type="button" onclick="window.open('https://discord.gg/zAYym57Fy6')"
+                style="font-size: large; font-weight: bold;">Join the Discord!</button>
+            <br>
+
+
+    </div>
+
+</div>
+</div>
+<!-- End window -->
+
+
+<!-- Start blog window -->
+<div class="window drag res" id="calc" style="display: none;">
+    <div class="title-bar">
+        <div class="title-bar-text">News/Blog</div>
+        <div class="title-bar-controls">
+            <button aria-label="Close" id="calcclose"></button>
+        </div>
+    </div>
+    <div class="window-body" style="font-size: 15px">
+        <p><b>Use button to open our blog in a new window!</b> <br> <br>
+            <br>
+            <img id="blogImage" src="images/kywyblog.png" alt="KYWY blog redirect button"
+                style="justify-content: center; padding-left: 25px; cursor: pointer;">
+            <br>
+
+            <script>
+                // Get a reference to the image element
+                const openPageImage = document.getElementById("blogImage");
+
+                // Add a click event listener to the image
+                openPageImage.addEventListener("click", function () {
+                    const newPageURL = "blog.html";
+
+                    // Open the new webpage in the same tab
+                    window.open(newPageURL, "_self");
+                });
+            </script>
+        </p>
+    </div>
+</div>
+<!-- End window -->
+<!-- Start Privacy window -->
+<div class="window drag res" id="privacy" style="display: none;">
+    <div class="title-bar">
+        <div class="title-bar-text">Privacy</div>
+        <div class="title-bar-controls">
+            <button aria-label="Close" id="privacyclose"></button>
+        </div>
+    </div>
+    <div class="window-body" style="font-size: 15px">
+        <p><b>Use this button to open our privacy policy</b> <br> <br>
+            <br>
+            <!-- Give the image an id for reference -->
+            <img id="privacyImage" src="images/privacy.png" alt="KYWY privacy policy information button" <br>
+            <script>
+                // Get a reference to the image element
+                const openPageImage1 = document.getElementById("privacyImage");
+
+                // Add a click event listener to the image
+                openPageImage1.addEventListener("click", function () {
+                    const newPageURL = "legal.html";
+
+                    // Open the new webpage in a new tab or window
+                    window.open(newPageURL, "_blank");
+                });
+            </script>
+        </p>
+    </div>
+</div>
+<!-- End window -->
+<!-- Start Contact window -->
+<div class="window drag res" id="contact" style="display: none;">
+    <div class="title-bar">
+        <div class="title-bar-text">Community</div>
+        <div class="title-bar-controls">
+            <button aria-label="Close" id="contactclose"></button>
+        </div>
+    </div>
+    <div class="window-body" style="font-size: 15px">
+        <p><b>Contact us at Contact@Kywy.io </b>
+            <br>
+            <br>
+        <div id="holder">
+            <div id="divide"></div>
+            <div id="social">
+
+                <a id="tiktok" href="https://www.tiktok.com/@officialkywy" title="Follow us on TikTok" target="_blank">
+                    <i class="fab fa-tiktok fa-3x"></i>
+                </a>
+                <br>
+                <a id="instagram" href="https://www.instagram.com/kywy.io/" title="Follow us on Instagram"
+                    target="_blank">
+                    <i class="fab fa-instagram fa-3x"></i>
+                </a>
+
+                <br>
+                <a id="twitter" href="https://twitter.com/officialkywy" title="Follow us on Twitter" target="_blank">
+                    <i class="fab fa-twitter fa-3x"></i>
+                    <br>
+
+                    <a id="Discord" href="https://discord.gg/qBcwHAXM" title="Join our Discord" target="_blank">
+                        <i class="fab fa-discord fa-3x"></i>
+
+                    </a>
+            </div>
+        </div>
+        </p>
+    </div>
+</div>
+<!-- End window -->
+
+<!-- Start Mailing list window -->
+<div class="window drag res" id="mailingList" style="width: 300px; display: none;">
+    <div class="title-bar">
+        <div class="title-bar-text">Mailing List</div>
+        <div class="title-bar-controls">
+            <button aria-label="Close" id="mailingListclose"></button>
+        </div>
+    </div>
+    <div class="window-body" style="font-size: 15px">
+        <p><b>Follow this link to join the mailing list:</b></p>
+        <br>
+        <div class="mailingListButton">
+            <button type="button" onclick="window.open('http://eepurl.com/iannbL', '_blank')">Mailing List</button>
+        </div>
+        <br><br><br>
+        <p>Or use this link: <a href="http://eepurl.com/iannbL" target="_blank">http://eepurl.com/iannbL</a></p>
+        <br><br>
+    </div>
+</div>
+
+<!-- End window -->
+
+<!-- Start kywy window -->
+<div class="window drag res" id="kywy" style="width: 300px;display:none;">
+    <div class="title-bar">
+        <div class="title-bar-text">Kywy</div>
+        <div class="title-bar-controls">
+            <button aria-label="Close" id="kywyclose"></button>
+        </div>
+    </div>
+    <div class="window-body">
+        <p><b>Follow this link to open our Store page</b></p>
+        <br>
+        <div class="githubButton">
+            <button type="button" onclick="window.open('https://koinslot.myshopify.com/', '_blank')">Store</button>
+        </div>
+        <br><br><br>
+        <p>Or use this link: <a href="https://koinslot.myshopify.com"
+                target="_blank">https://koinslot.myshopify.com/</a></p>
+        </p>
+    </div>
+</div>
+<!-- End window -->
+<!-- Start Browser Window -->
+<div class="window drag res" id="browser" style="display:none;">
+    <div class="title-bar">
+        <div class="title-bar-text">Browser</div>
+        <div class="title-bar-controls">
+            <button aria-label="Close" id="browserclose"></button>
+        </div>
+    </div>
+    <div class="window-body">
+        <input type="text" id="browserinput" value="kywy.io" />
+        <!-- <img id="browsergif" src="images/browsergif.gif" style="justify-content: center; padding-left: 25px;"> -->
+    </div>
+</div>
+<!-- End window -->
+<!-- Start The team Window -->
+<div class="window drag" id="theteam" style="display:none;">
+    <div class="title-bar">
+        <div class="title-bar-text">
+            The Team!
+        </div>
+        <br>
+        <div class="title-bar-controls">
+            <button aria-label="Close" id="theteamclose"></button>
+        </div>
+    </div>
+    <div class="window-body">
+        <p> <br> <b>The Team:</b>
+            <br>
+            <br>
+        <div class="headshots">
+            <div class="erikimage"> <br>
+                <img src="images/erik.jpeg" alt="Erik Lutz - Software CTO" style="padding: 8px;">
+                Erik Lutz <br> (Software CTO)
+            </div>
+            <div class="ethanimage"> <br>
+                <img src="images/ethanheadshot.jpg" alt="Ethan Lannan - Marketing CMO" style="padding: 8px;">
+                Ethan Lannan <br> (Marketing CMO)
+            </div>
+            <div class="josephimage"> <br>
+                <img src="images/josephheadshot.png" alt="Joseph Lannan - Hardware COO" style="padding: 8px;">
+                Joseph Lannan <br> (Hardware COO)
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End window -->
+<!-- Start Snake Window -->
+<div class="window drag" id="snake" style="display:none;">
+    <div class="title-bar">
+        <div calss="snakeScore">
+        </div>
+
+        <div class="title-bar-text">Snake</div>
+        <div class="title-bar-controls">
+            <button aria-label="Close" id="snakeclose"></button>
+        </div>
+    </div>
+    <div class="window-body">
+        <canvas width="240" height="240" id="game"></canvas>
+        <br>
+        <br>
+        <div class="dpad">
+            <h4>
+                <p id="p1"> Score:<span id="score" justify-content: center;> </span></p>
+
+            </h4>
+            <h4.5>
+                <div id="highScoreDisplay">Record: <span id="highScore">0</span></div>
+            </h4.5>
+
+            <button id="btn1" class="dpad-btn up" height=40px>
+                <button id="btn2" class="dpad-btn down">
+                    <button id="btn3" class="dpad-btn left">
+                        <button id="btn4" class="dpad-btn right">
+        </div>
+    </div>
+</div>
+</div>
+<!-- End window -->
+<!-- Github window Start-->
+<div class="window drag res" id="github" style="width: 300px; display: none;">
+    <div class="title-bar">
+        <div class="title-bar-text">Github</div>
+        <div class="title-bar-controls">
+            <button aria-label="Close" id="githubclose"></button>
+        </div>
+    </div>
+    <div class="window-body" style="font-size: 15px">
+        <p><b>Follow this link to open our github page</b></p>
+        <br>
+        <div class="githubButton">
+            <button type="button" onclick="window.open('https://github.com/KOINSLOT-Inc', '_blank')">Github</button>
+        </div>
+        <br><br><br>
+        <p>Or use this link: <a href="https://github.com/KOINSLOT-Inc"
+                target="_blank">https://github.com/KOINSLOT-Inc</a></p>
+        <br><br>
+    </div>
+</div>
+<!-- End github window-->
+
+<!-- Start TaskBar -->
+<div class="window" id="taskbar">
+    <div id="start">
+        <button class="startbtn" id="start"><img
+                src="https://win98icons.alexmeub.com/icons/png/windows-0.png" /><span>Start</span></button>
+    </div>
+    <div id="items">
+        <button class="tbtab active" id="welcometab"><span>Welcome!</span></button>
+        <button class="tbtab" id="calctab" style="display:none;"><span>News/Blog</span></button>
+        <button class="tbtab" id="mailingListtab" style="display:none;"><span>Mailing List</span></button>
+        <button class="tbtab" id="kywytab" style="display:none;"><span>Kywy</span></button>
+        <!-- <button class="tbtab" id="Model3Dtab" style="display:none;"><span>3D Model</span></button> -->
+        <button class="tbtab" id="browsertab" style="display:none;"><span>Browser</span></button>
+        <button class="tbtab" id="snaketab" style="display:none;"><span>Snake</span></button>
+        <button class="tbtab" id="theteamtab" style="display:none;"><span>The Team</span></button>
+        <button class="tbtab" id="githubtab" style="display:none;"><span>Github</span></button>
+        <button class="tbtab" id="contcttab" style="display:none;"><span>Community</span></button>
+        <button class="tbtab" id="privacytab" style="display:none;"><span>Privacy Policy</span></button>
+    </div>
+    <div id="time">
+        <span id="time-s">12:02</span>
+    </div>
+    <div id=musicplayer>
+        <audio id="player" autoplay style="width: 20px">
+            <source src="images/synthbackground.mp3" type="audio/mpeg">
+        </audio>
+        <button onclick="aud_play_pause();">
+            <img src="images/musicbutton.png" width=15px>
+        </button>
+    </div>
+    <div>
+    </div>
+    <!-- End Taskbar -->
+    <!-- start menu -->
+    <ul id="menu" class="ui-menu" style="display:none;">
+        <li class="ui-menu-item" id="welcomembtn">
+            <div class="ui-menu-item-wrapper" style=" font-size: 14px; font-weight: bold; "><span
+                    class="ui-icon ui-icon-info"></span>
+                <b> 😊 Welcome to KYWY.io</b>
+            </div>
+        </li>
+        <hr>
+        <li class="ui-menu-item" id="kywybtn" style=" font-size: 14px;">
+            <div class="ui-menu-item-wrapper"><span class="ui-icon  ui-icon-star"></span> 🥝 Store </div>
+        </li>
+        <li class="ui-menu-item" id="calcbtn" style=" font-size: 14px;">
+            <div class="ui-menu-item-wrapper"><span class="ui-icon  ui-icon-star"></span>🔍 News/Blog
+        </li>
+        <li class="ui-menu-item" id="mailingListbtn" style=" font-size: 14px;">
+            <div class="ui-menu-item-wrapper"><span class="ui-icon ui-icon-circle-plus"></span> 📧 Mailing List
+            </div>
+        </li>
+        <li class="ui-menu-item" id="contactbtn" style=" font-size: 14px;">
+            <div class="ui-menu-item-wrapper"><span class="ui-icon  ui-icon-star"></span> 🌐 Community</div>
+        </li>
+        <!-- <li class="ui-menu-item" id="Model3Dbtn" style=" font-size: 14px;">
+         <div class="ui-menu-item-wrapper"><span class="ui-icon ui-icon-circle-plus"></span> 📦 3D Model
+         </div>
+         </li> -->
+        <li class="ui-menu-item" id="theteambtn" style=" font-size: 14px;">
+            <div class="ui-menu-item-wrapper"><span class="ui-icon  ui-icon-star"></span> ✋ The Team </div>
+        </li>
+        <!-- <li class="ui-menu-item" id="browserbtn" style=" font-size: 14px;">
+                <div class="ui-menu-item-wrapper"><span class="ui-icon ui-icon-circle-zoomout"></span> 📱 Browser
+                </div>
+            </li> -->
+        <li class="ui-menu-item" id="snakebtn" style=" font-size: 14px;">
+            <div class="ui-menu-item-wrapper"><span class="ui-icon  ui-icon-star"></span> 🐍 Snake</div>
+        </li>
+        <li class="ui-menu-item" id="githubbtn" style=" font-size: 14px;">
+            <div class="ui-menu-item-wrapper"><span class="ui-icon  ui-icon-star"></span> 😸 Github</div>
+        </li>
+
+        <li class="ui-menu-item" id="privacybtn" style=" font-size: 14px;">
+            <div class="ui-menu-item-wrapper"><span class="ui-icon  ui-icon-star"></span> 🔒 Privacy Policy</div>
+        </li>
+    </ul>
+    <!-- end menu -->
+</div>
+</div>
+<div class="page">
+    <div class="koinslot_logo"></div>
+    <div class="KYWY_image">
+    </div>
+    <div class="kywybykoinslot">
+        <img src="images/kywybykoinslot.gif" alt="KYWY by KOINSLOT animation">
+    </div>
+    <div class="startHere">
+        <img src="images/starthere.gif" alt="Start here guide for website">
+    </div>
+    </section>
+    <div class="StarBackground">
+        <div id="stars"></div>
+        <div id="stars1"></div>
+        <div id="stars2"></div>
+        <div id=" stars3"></div>
+        <div id="title"></div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+<div class="navbar">
+    <script src="kywy.js"></script>
+    <script src="98footer.js"></script>
+    <script src="starthere.js"></script>
+    <script src="dpad.js"></script>
+</div>
+<script></script>
+</body>
+
+</html>

@@ -1,0 +1,62 @@
+# Force HTTPS
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Clean URLs - hide .html extension
+# Check if the requested resource exists as a .html file
+RewriteCond %{REQUEST_FILENAME}.html -f
+# Rewrite requests to .html files, if exists
+RewriteRule !.*\.html$ %{REQUEST_FILENAME}.html [L, QSA]
+
+# Directory Index Priority
+DirectoryIndex kywy.html index.shtml index.php default.html home.html kywy-website-main
+
+# PHP settings - BEGIN cPanel-generated handler, do not edit
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php80___lsphp .php .php8 .phtml
+</IfModule>
+# PHP settings - END cPanel-generated handler, do not edit
+
+# Security Headers
+Header always set Content-Security-Policy "upgrade-insecure-requests;"
+Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+# Disable Server Signature
+ServerSignature Off
+
+# Prevent directory browsing
+Options -Indexes
+
+# Custom Error Pages
+ErrorDocument 404 /404.html
+ErrorDocument 500 /500.html
+
+# Compress text files
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/plain text/html text/xml text/css application/xml application/xhtml+xml application/rss+xml application/javascript application/x-javascript
+</IfModule>
+
+# Leverage Browser Caching
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/jpg "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/gif "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType text/html "access plus 1 month"
+  ExpiresByType application/pdf "access plus 1 month"
+  ExpiresByType text/x-javascript "access plus 1 month"
+  ExpiresByType application/x-shockwave-flash "access plus 1 month"
+  ExpiresByType image/x-icon "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresDefault "access plus 2 days"
+</IfModule>
+
+# php -- BEGIN cPanel-generated handler, do not edit
+# Set the “ea-php82” package as the default “PHP” programming language.
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php82___lsphp .php .php8 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit
