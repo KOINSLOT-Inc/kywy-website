@@ -31,10 +31,15 @@ html, body {
 
 /* Shrink the KYWY start icon to fit the button (~50%) */
 .startbtn img, #startbtn img {
-  width: 24px;
-  height: auto;
+  width: 18px;
+  height: 18px;
+  display: inline-block;
   vertical-align: middle;
-  margin-right: 6px;
+  margin-right: 8px;
+  margin-left: 2px;
+  object-fit: contain;
+  position: relative;
+  top: 0px;
 }
 
 /* Ensure window bodies are a positioned stacking context for iframe wrappers */

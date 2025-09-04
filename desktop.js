@@ -26,94 +26,52 @@
                 dragOffset.x = e.clientX - rect.left;
                 dragOffset.y = e.clientY - rect.top;
 
-                // Start dragging immediately on mousedown
-                isDragging = false;
-                let hasMoved = false;
+                // Desktop icons are no longer draggable. Only selection and double-click opening are enabled.
+                function makeIconsDraggable() {
+                    desktopIcons.forEach(icon => {
+                        let clickTimer = null;
+                        let clickCount = 0;
 
-                function onMouseMove(e) {
-                    if (!hasMoved) {
-                        // First movement - start dragging
-                        hasMoved = true;
-                        isDragging = true;
-                        icon.style.position = 'fixed';
-                        icon.style.zIndex = '1000';
-                        document.body.style.userSelect = 'none';
-                        
-                        // Clear any pending click timers since we're dragging
-                        if (clickTimer) {
-                            clearTimeout(clickTimer);
-                            clickTimer = null;
-                            clickCount = 0;
+                        // Handle single click selection and double-click opening
+                        // Single click to select
+                        icon.addEventListener('click', function(e) {
+                            if (e.button !== 0) return;
+                            clearSelection();
+                            icon.classList.add('selected');
+                            selectedIcons.add(icon);
+                        });
+
+                        // Double click to open
+                        icon.addEventListener('dblclick', function(e) {
+                            if (e.button !== 0) return;
+                            const url = icon.getAttribute('data-url');
+                            if (url) {
+                                window.open(url, '_blank');
+                            }
+                        });
+
+                        function handleIconClick(icon, e) {
+                            clickCount++;
+                            if (clickCount === 1) {
+                                clearSelection();
+                                icon.classList.add('selected');
+                                selectedIcons.add(icon);
+                                clickTimer = setTimeout(() => {
+                                    clickCount = 0;
+                                    clickTimer = null;
+                                }, 300);
+                            } else if (clickCount === 2) {
+                                clearTimeout(clickTimer);
+                                clickTimer = null;
+                                clickCount = 0;
+                                const url = icon.getAttribute('data-url');
+                                if (url) {
+                                    window.open(url, '_blank');
+                                }
+                            }
                         }
-                    }
-                    
-                    if (isDragging) {
-                        icon.style.left = (e.clientX - dragOffset.x) + 'px';
-                        icon.style.top = (e.clientY - dragOffset.y) + 'px';
-                    }
+                    });
                 }
-
-                function onMouseUp(e) {
-                    if (isDragging) {
-                        isDragging = false;
-                        document.body.style.userSelect = '';
-                        icon.style.zIndex = '';
-                    } else if (!hasMoved) {
-                        // This was a click (no movement)
-                        handleIconClick(icon, e);
-                    }
-                    
-                    document.removeEventListener('mousemove', onMouseMove);
-                    document.removeEventListener('mouseup', onMouseUp);
-                }
-
-                document.addEventListener('mousemove', onMouseMove);
-                document.addEventListener('mouseup', onMouseUp);
-            });
-
-            // Handle single click selection and double-click opening
-            function handleIconClick(icon, e) {
-                clickCount++;
-                
-                if (clickCount === 1) {
-                    // First click - select the icon
-                    clearSelection();
-                    icon.classList.add('selected');
-                    selectedIcons.add(icon);
-                    
-                    // Wait for potential second click
-                    clickTimer = setTimeout(() => {
-                        clickCount = 0;
-                        clickTimer = null;
-                        // Single click completed - icon is now selected
-                    }, 300);
-                    
-                } else if (clickCount === 2) {
-                    // Double click - open the icon
-                    clearTimeout(clickTimer);
-                    clickTimer = null;
-                    clickCount = 0;
-                    
-                    // Get URL from data-url attribute and open it
-                    const url = icon.getAttribute('data-url');
-                    if (url) {
-                        window.open(url, '_blank');
-                    }
-                }
-            }
-        });
-    }
-
-    // Desktop selection functionality
-    function initDesktopSelection() {
-        document.addEventListener('mousedown', function(e) {
-            // Only start selection on empty desktop area (not on windows or icons)
-            const target = e.target;
-            if (target.closest('.window') || target.closest('.desktop-icon') || target.closest('#taskbar')) {
-                return;
-            }
-
-            // Clear previous selection
             clearSelection();
 
             isSelecting = true;
@@ -158,15 +116,13 @@
     }
 
     function updateIconSelection(selectionLeft, selectionTop, selectionWidth, selectionHeight) {
-        desktopIcons.forEach(icon => {
+        desktopIcons.forEach(function(icon) {
             const rect = icon.getBoundingClientRect();
-            
             // Check if icon intersects with selection box
             const intersects = !(rect.right < selectionLeft || 
                                rect.left > selectionLeft + selectionWidth || 
                                rect.bottom < selectionTop || 
                                rect.top > selectionTop + selectionHeight);
-
             if (intersects) {
                 icon.classList.add('selected');
                 selectedIcons.add(icon);
@@ -178,7 +134,7 @@
     }
 
     function clearSelection() {
-        desktopIcons.forEach(icon => {
+        desktopIcons.forEach(function(icon) {
             icon.classList.remove('selected');
         });
         selectedIcons.clear();
@@ -202,4 +158,5 @@
         makeIconsDraggable();
         initDesktopSelection();
     }
+
 })();
