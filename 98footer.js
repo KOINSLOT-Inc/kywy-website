@@ -1,6 +1,17 @@
 $("#startbtn").click(function () {
     $("#menu").fadeToggle(40);
 });
+// Close menu if clicking outside of it
+$(document).on('mousedown touchstart', function (e) {
+    var $menu = $('#menu');
+    var $startbtn = $('#startbtn');
+    if ($menu.is(':visible')) {
+        // If click is outside menu and not on start button
+        if (!$menu.is(e.target) && $menu.has(e.target).length === 0 && !$startbtn.is(e.target)) {
+            $menu.fadeOut(40);
+        }
+    }
+});
 
 // Make all windows draggable and resizable
 $(function () {
@@ -252,7 +263,7 @@ $("#welcomembtn").click(function () {
 $('#theteamclose').on("click", function () {
     $('#theteam').removeClass("active");
     $('#theteam').fadeOut(40);
-    $('#thetamtab').fadeOut(40);
+    $('#theteamtab').remove();
 });
 
 $("#theteambtn").click(function () {
@@ -548,6 +559,7 @@ $('#calcbtn').click(function () {
 $('#blogclose').on("click", function () {
     $('#blogwindow').removeClass('active');
     $('#blogwindow').fadeOut(40);
+    $('#blogwindowtab').remove();
 });
 
 $('#githubbtn').click(function () {
