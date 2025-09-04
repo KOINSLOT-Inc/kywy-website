@@ -1,23 +1,170 @@
-$("#start").click(function () {
+$("#startbtn").click(function () {
     $("#menu").fadeToggle(40);
 });
 
+// Make all windows draggable and resizable
 $(function () {
-    $(".drag").draggable();
-    $(".res").resizable();
-    $('.window').draggable();
+    $(".window.drag.res").draggable({
+        handle: ".title-bar",
+        containment: "body",
+        start: function () {
+            bringToFront($(this));
+        }
+    });
+    $(".window.drag.res").resizable({
+        minWidth: 300,
+        minHeight: 200,
+        start: function () {
+            bringToFront($(this));
+        }
+    });
 });
 
-
 var activetab = "";
+var topZ = 3000; // base z-index for windows
 
-$(".window").not("#taskbar").click(function () {
-    $(".window").removeClass("active");
+function bringToFront($win) {
+    if (!$win || !$win.length) return;
+    // remove active from others
+    $(".window").not("#taskbar").removeClass("active");
     $(".tbtab").removeClass("active");
-    $(this).addClass("active");
-    activetab = $(this).attr("id") + "tab";
-    console.log(activetab)
-    $("#" + activetab).addClass("active");
+    $win.addClass("active");
+    // reset other windows to baseline z-index so this window can be clearly on top
+    var baseline = 1000;
+    $('.window').not('#taskbar').css('z-index', baseline);
+    // bump z-index for the focused window
+    topZ += 1;
+    $win.css('z-index', topZ);
+    activetab = $win.attr("id") + "tab";
+    if ($("#" + activetab).length) {
+        $("#" + activetab).addClass("active");
+    }
+    // make only the active window's iframe interactive
+    $('.window').not('#taskbar').each(function () {
+        var $w = $(this);
+        var $ifr = $w.find('iframe');
+        if (!$ifr.length) return;
+        if ($w.is($win)) {
+            $ifr.css('pointer-events', 'auto');
+        } else {
+            $ifr.css('pointer-events', 'none');
+        }
+    });
+
+    // Manage iframe wrapper stacking so inactive iframes don't visually overlap
+    $('.window').not('#taskbar').each(function () {
+        var $w = $(this);
+        var $wrap = $w.find('.iframe-wrapper');
+        if (!$wrap.length) return;
+        if ($w.is($win)) {
+            // ensure the wrapper is below the titlebar but above window body background
+            $wrap.css('z-index', 50);
+        } else {
+            $wrap.css('z-index', 0);
+        }
+    });
+}
+
+// Wrap raw iframe elements in a positioned wrapper so we can control stacking
+function wrapIframes() {
+    $('.window').each(function () {
+        var $w = $(this);
+        $w.find('iframe').each(function () {
+            var $iframe = $(this);
+            if ($iframe.parent().hasClass('iframe-wrapper')) return;
+            var $wrap = $('<div class="iframe-wrapper"></div>');
+            $iframe.after($wrap);
+            $wrap.append($iframe);
+        });
+    });
+}
+
+// Run wrapping once on load
+$(function () {
+    wrapIframes();
+});
+
+// Generic handler: clicking a taskbar tab toggles the corresponding window
+$(document).on('click', '.tbtab', function (e) {
+    var tabId = $(this).attr('id');
+    if (!tabId) return;
+    // canonical mapping: <windowId>tab -> #<windowId>
+    var winId = tabId.replace(/tab$/, '');
+    var $win = $('#' + winId);
+    if (!$win.length) return;
+    if ($win.is(':visible')) {
+        // minimize/hide
+        $win.removeClass('active');
+        $win.fadeOut(40);
+        $(this).removeClass('active');
+    } else {
+        // show and bring to front
+        $win.fadeIn(40);
+        $win.addClass('active');
+        $('.tbtab').removeClass('active');
+        $(this).addClass('active');
+        bringToFront($win);
+        // ensure overlays/iframe wiring for iframe windows
+        addIframeOverlay(winId);
+    }
+});
+
+// Create a taskbar tab for a window if it doesn't exist
+function ensureTaskbarTab(windowId, label) {
+    var tabId = windowId + 'tab';
+    if ($('#' + tabId).length) return;
+    var $btn = $('<button/>', { class: 'tbtab', id: tabId }).html('<span>' + label + '</span>');
+    $btn.on('click', function () {
+        var $w = $('#' + windowId);
+        if ($w.is(':visible')) {
+            // toggle minimize
+            $w.toggle();
+        } else {
+            $w.fadeIn(40);
+            bringToFront($w);
+        }
+    });
+    $('#items').append($btn);
+}
+
+// Add an overlay on top of an iframe to capture first click and bring window to front
+function addIframeOverlay(windowId) {
+    var $win = $('#' + windowId);
+    if (!$win.length) return;
+    // remove existing overlay
+    $win.find('.iframe-click-overlay').remove();
+    var $overlay = $('<div/>', { class: 'iframe-click-overlay' });
+    $overlay.on('mousedown touchstart', function (e) {
+        e.preventDefault();
+        bringToFront($win);
+        // remove overlay so iframe becomes interactive
+        $overlay.remove();
+        // wire iframe focus handlers for subsequent interactions
+        wireIframeFocus(windowId);
+    });
+    $win.append($overlay);
+    // also wire iframe focus now (in case overlay is removed by other means)
+    wireIframeFocus(windowId);
+}
+
+// Wire iframe pointer events so parent can bring window to front on subsequent interactions
+function wireIframeFocus(windowId) {
+    var $win = $('#' + windowId);
+    if (!$win.length) return;
+    var $iframe = $win.find('iframe');
+    if (!$iframe.length) return;
+    // remove previous handlers
+    $iframe.off('.kywyFocus');
+    // pointerdown/enter on iframe element (not inside) will bring parent window to front
+    $iframe.on('pointerdown.kywyFocus pointerenter.kywyFocus', function (e) {
+        bringToFront($win);
+    });
+}
+
+// Bring window to front on mousedown (works even if click occurs inside iframe for parent container)
+$(document).on('mousedown', '.window', function (e) {
+    if ($(this).attr('id') === 'taskbar') return;
+    bringToFront($(this));
 });
 
 // Clock //
@@ -85,7 +232,7 @@ $('#browserclose').on("click", function () {
 });
 
 $("#browserbtn").click(function () {
-    $("#menu").fadeToggle(40);
+    $('#menu').fadeOut(40);
     $("#browser").fadeIn(40);
     $('#browser').addClass("active");
     $(".tbtab").removeClass("active");
@@ -102,7 +249,7 @@ $('#welcomeclose').on("click", function () {
 });
 
 $("#welcomembtn").click(function () {
-    $("#menu").fadeToggle(40);
+    $('#menu').fadeOut(40);
     $("#welcome").fadeIn(40);
     $('#welcome').addClass("active");
     $(".tbtab").removeClass("active");
@@ -118,7 +265,7 @@ $('#theteamclose').on("click", function () {
 });
 
 $("#theteambtn").click(function () {
-    $("#menu").fadeToggle(40);
+    $('#menu').fadeOut(40);
     $("#theteam").fadeIn(40);
     $('#theteam').addClass("active");
     $(".tbtab").removeClass("active");
@@ -126,100 +273,41 @@ $("#theteambtn").click(function () {
     $('#theteamtab').addClass("active");
 });
 
-// calc //
-$('#calcclose').on("click", function () {
-    $('#calc').removeClass("active");
-    $('#calc').fadeOut(40);
-    $('#calctab').fadeOut(40);
+// Legacy calc handlers removed; use the new `#blogwindow` iframe instead
+
+// KYWY Docs window open/close
+$('#docsclose').on("click", function () {
+    $('#docswindow').removeClass("active");
+    $('#docswindow').fadeOut(40);
+});
+$("#docsbtn").click(function () {
+    $('#menu').fadeOut(40);
+    $('#docswindow').fadeIn(40);
+    $('#docswindow').addClass("active");
 });
 
-$("#calcbtn").click(function () {
-    $("#menu").fadeToggle(40);
-    $("#calc").fadeIn(40);
-    $('#calc').addClass("active");
-    $(".tbtab").removeClass("active");
-    $("#calctab").fadeIn(40);
-    $('#calctab').addClass("active");
+// Privacy Policy window open/close
+$('#privacywindowclose').on("click", function () {
+    $('#privacywindow').removeClass("active");
+    $('#privacywindow').fadeOut(40);
 });
-
-// mailingList //
-$('#mailingListclose').on("click", function () {
-    $('#mailingList').removeClass("active");
-    $('#mailingList').fadeOut(40);
-    $('#mailingListtab').fadeOut(40);
-});
-
-$("#mailingListbtn").click(function () {
-    $("#menu").fadeToggle(40);
-    $("#mailingList").fadeIn(40);
-    $('#mailingList').addClass("active");
-    $(".tbtab").removeClass("active");
-    $("#mailingListtab").fadeIn(40);
-    $('#mailingListtab').addClass("active");
-});
-
-// kywy //
-$('#kywyclose').on("click", function () {
-    $('#kywy').removeClass("active");
-    $('#kywy').fadeOut(40);
-    $('#kywytab').fadeOut(40);
-});
-
-$("#kywybtn").click(function () {
-    $("#menu").fadeToggle(40);
-    $("#kywy").fadeIn(40);
-    $('#kywy').addClass("active");
-    $(".tbtab").removeClass("active");
-    $("#kywytab").fadeIn(40);
-    $('#kywytab').addClass("active");
-});
-
-$('#githubclose').on("click", function () {
-    $('#github').removeClass("active");
-    $('#github').fadeOut(40);
-    $('#githubtab').fadeOut(40);
-});
-
-$("#githubbtn").click(function () {
-    $("#menu").fadeToggle(40);
-    $("#github").fadeIn(40);
-    $('#github').addClass("active");
-    $(".tbtab").removeClass("active");
-    $("#githubtab").fadeIn(40);
-    $('#githubtab').addClass("active");
-});
-
-$('#privacyclose').on("click", function () {
-    $('#privacy').removeClass("active");
-    $('#privacy').fadeOut(40);
-    $('#privacytab').fadeOut(40);
-});
-
 $("#privacybtn").click(function () {
-    $("#menu").fadeToggle(40);
-    $("#privacy").fadeIn(40);
-    $('#privacy').addClass("active");
-    $(".tbtab").removeClass("active");
-    $("#privacytab").fadeIn(40);
-    $('#privacytab').addClass("active");
+    $('#menu').fadeOut(40);
+    $('#privacywindow').fadeIn(40);
+    $('#privacywindow').addClass("active");
 });
 
-
-$('#contactclose').on("click", function () {
-    $('#contact').removeClass("active");
-    $('#contact').fadeOut(40);
-    $('#contacttab').fadeOut(40);
+// Paint window open/close
+$('#paintclose').on("click", function () {
+    $('#paintwindow').removeClass("active");
+    $('#paintwindow').fadeOut(40);
 });
 
-$("#contactbtn").click(function () {
-    $("#menu").fadeToggle(40);
-    $("#contact").fadeIn(40);
-    $('#contact').addClass("active");
-    $(".tbtab").removeClass("active");
-    $("#contacttab").fadeIn(40);
-    $('#contacttab').addClass("active");
+$("#paintbtn").click(function () {
+    $('#menu').fadeOut(40);
+    $('#paintwindow').fadeIn(40);
+    $('#paintwindow').addClass("active");
 });
-
 
 // Model3D //
 // $('#Model3Dclose').on("click", function () {
@@ -248,7 +336,7 @@ $('#snakeclose').on("click", function () {
 });
 
 $("#snakebtn").click(function () {
-    $("#menu").fadeToggle(40);
+    $('#menu').fadeOut(40);
     $("#snake").fadeIn(40);
     $('#snake').addClass("active");
     $(".tbtab").removeClass("active");
@@ -413,4 +501,99 @@ function aud_play_pause() {
         myAudio.pause();
     }
 }
+
+// Utility to add fullscreen button behavior
+function addFullscreenButton(windowId, iframeSelector, url) {
+    const win = document.getElementById(windowId);
+    if (!win) return;
+    const titleBarControls = win.querySelector('.title-bar-controls');
+    if (!titleBarControls) return;
+    // Create fullscreen button
+    const fsBtn = document.createElement('button');
+    fsBtn.setAttribute('aria-label', 'Fullscreen');
+    fsBtn.innerHTML = '⛶';
+    fsBtn.style.marginRight = '4px';
+    fsBtn.onclick = function(e) {
+        e.stopPropagation();
+        window.open(url, '_blank');
+    };
+    // Insert before close button
+    titleBarControls.insertBefore(fsBtn, titleBarControls.firstChild);
+}
+
+// Add fullscreen buttons to all windows
+addFullscreenButton('paintwindow', 'iframe', 'https://tools.kywy.io/drawing-editor.html');
+addFullscreenButton('blogwindow', 'iframe', 'blog.html');
+addFullscreenButton('githubwindow', 'iframe', 'https://github.com/KOINSLOT-Inc');
+addFullscreenButton('docswindow', 'iframe', 'https://docs.kywy.io');
+addFullscreenButton('privacywindow', 'iframe', 'legal.html');
+
+// Fix window opening so windows stay open after start menu closes
+$('#paintbtn').click(function () {
+    $('#paintwindow').fadeIn(40);
+    $('#paintwindow').addClass('active');
+    ensureTaskbarTab('paintwindow', 'Paint');
+    bringToFront($('#paintwindow'));
+    addIframeOverlay('paintwindow');
+});
+$('#paintclose').on("click", function () {
+    $('#paintwindow').removeClass('active');
+    $('#paintwindow').fadeOut(40);
+});
+
+$('#calcbtn').click(function () {
+    $('#blogwindow').fadeIn(40);
+    $('#blogwindow').addClass('active');
+    ensureTaskbarTab('blogwindow', 'Blog');
+    bringToFront($('#blogwindow'));
+    addIframeOverlay('blogwindow');
+});
+$('#blogclose').on("click", function () {
+    $('#blogwindow').removeClass('active');
+    $('#blogwindow').fadeOut(40);
+});
+
+$('#githubbtn').click(function () {
+    $('#menu').fadeOut(40);
+    window.open('https://github.com/KOINSLOT-Inc', '_blank');
+});
+$('#githubclose').on("click", function () {
+    $('#githubwindow').removeClass('active');
+    $('#githubwindow').fadeOut(40);
+});
+
+// Defensive: also handle any close button inside the github window (in case ID isn't reachable)
+$('#githubwindow').on('click', '.title-bar-controls button[aria-label="Close"]', function () {
+    $('#githubwindow').removeClass('active');
+    $('#githubwindow').fadeOut(40);
+});
+
+$('#docsbtn').click(function () {
+    $('#docswindow').fadeIn(40);
+    $('#docswindow').addClass('active');
+    ensureTaskbarTab('docswindow', 'Docs');
+    bringToFront($('#docswindow'));
+    addIframeOverlay('docswindow');
+});
+// Discord
+$('#contactbtn').click(function () {
+    $('#menu').fadeOut(40);
+    window.open('https://discord.com/invite/zAYym57Fy6', '_blank');
+});
+$('#docsclose').on("click", function () {
+    $('#docswindow').removeClass('active');
+    $('#docswindow').fadeOut(40);
+});
+
+$('#privacybtn').click(function () {
+    $('#privacywindow').fadeIn(40);
+    $('#privacywindow').addClass('active');
+    ensureTaskbarTab('privacywindow', 'Privacy');
+    bringToFront($('#privacywindow'));
+    addIframeOverlay('privacywindow');
+});
+$('#privacywindowclose').on("click", function () {
+    $('#privacywindow').removeClass('active');
+    $('#privacywindow').fadeOut(40);
+});
 

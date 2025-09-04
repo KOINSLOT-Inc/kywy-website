@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="styles.css" />
     <link rel="stylesheet/less" type="text/css" href="kywy.less" />
     <link rel="stylesheet" href="https://unpkg.com/98.css" />
-    <link rel="stylesheet" href="https://fonts.google.com/specimen/Silkscreen">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Silkscreen&display=swap">
     <link rel="stylesheet" href="https://unpkg.com/98.css@0.1.4/build/98.css" />
     <title>Kywy</title>
     <meta name="description" content="Kywy blog" />
@@ -23,6 +23,12 @@
 </head>
 
 <body onload="startTime()">
+<script>
+// Minimal fallback if startTime is not defined by the parent
+if (typeof startTime !== 'function') {
+    function startTime() { /* no-op fallback for standalone */ }
+}
+</script>
     <div class="StarBackground">
         <div id="stars"></div>
         <div id="stars1"></div>

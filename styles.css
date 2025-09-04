@@ -1,0 +1,60 @@
+/* Minimal placeholder to avoid 404s. Add project-specific overrides here. */
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Silkscreen', sans-serif;
+}
+
+/* Keep windows responsive */
+.window { box-sizing: border-box; }
+
+/* Small helper for iframe fallbacks */
+.window .iframe-fallback { display:flex; align-items:flex-start; justify-content:center; height:100%; padding-top:40px; }
+.window .iframe-fallback div { text-align:center; }
+.window .iframe-fallback button { padding:10px 14px; font-weight:bold; margin-top:12px; }
+
+/* Make resizable windows allow the body to grow and iframe to occupy full height */
+.window.drag.res { display:flex; flex-direction:column; }
+.window.drag.res .window-body { flex: 1 1 auto; min-height: 100px; overflow: auto; }
+.window.drag.res iframe { width:100%; height:100%; display:block; }
+
+/* iframe overlay to catch clicks and bring window to front */
+.iframe-click-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: transparent;
+  z-index: 100;
+}
+
+/* Taskbar tab styling */
+.tbtab { cursor: pointer; }
+
+/* Shrink the KYWY start icon to fit the button (~50%) */
+.startbtn img, #startbtn img {
+  width: 24px;
+  height: auto;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+/* Ensure window bodies are a positioned stacking context for iframe wrappers */
+.window .window-body { position: relative; }
+
+/* Wrapper around iframe so we can manage its stacking separately from window z-index */
+.iframe-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0; /* lowered by default */
+  overflow: hidden;
+}
+.iframe-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}

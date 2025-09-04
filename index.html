@@ -44,8 +44,10 @@
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <script src="three.min.js"></script>
-    <script src="OrbitControls.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/ui-lightness/jquery-ui.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r148/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r148/examples/js/controls/OrbitControls.min.js"></script>
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6YL05V08Y7"></script>
@@ -85,8 +87,22 @@
             </h1>
         </div>
     </div>
-</body>
 <!-- Header End -->
+
+<!-- Desktop Icons -->
+<div class="desktop-shortcuts">
+    <div class="desktop-icon" data-url="https://tools.kywy.io">
+        <div class="emoji-icon">🧰</div>
+        <div class="icon-label">KYWY Tools</div>
+    </div>
+    <div class="desktop-icon" data-url="https://app.arduino.cc/">
+        <img src="https://cdn.arduino.cc/header-footer/prod/assets/favicon-arduino/favicon.ico" alt="Arduino IDE">
+        <div class="icon-label">Arduino IDE</div>
+    </div>
+</div>
+
+<!-- Selection Box -->
+<div class="selection-box" id="selection-box"></div>
 
 <!-- Welcome window-->
 <div class=" window active drag res" id="welcome">
@@ -114,8 +130,8 @@
             <b>All day battery life, rp2040 chipset, USB-C, Micro SD Storage, and expandability. </b>
             <br>
             <br>
-                        <button type="button" onclick="window.open('https://koinslot.myshopify.com')"
-                style="font-size: large; font-weight: bold;">Pre-Order Now!</button>
+                        <button type="button" onclick="window.open('https://github.com/KOINSLOT-Inc', '_blank')"
+                style="font-size: large; font-weight: bold;">Check out our GitHub!</button>
             <br>
            <br>
             <button type="button" onclick="window.open('https://discord.gg/zAYym57Fy6')"
@@ -130,37 +146,7 @@
 <!-- End window -->
 
 
-<!-- Start blog window -->
-<div class="window drag res" id="calc" style="display: none;">
-    <div class="title-bar">
-        <div class="title-bar-text">News/Blog</div>
-        <div class="title-bar-controls">
-            <button aria-label="Close" id="calcclose"></button>
-        </div>
-    </div>
-    <div class="window-body" style="font-size: 15px">
-        <p><b>Use button to open our blog in a new window!</b> <br> <br>
-            <br>
-            <img id="blogImage" src="images/kywyblog.png" alt="KYWY blog redirect button"
-                style="justify-content: center; padding-left: 25px; cursor: pointer;">
-            <br>
-
-            <script>
-                // Get a reference to the image element
-                const openPageImage = document.getElementById("blogImage");
-
-                // Add a click event listener to the image
-                openPageImage.addEventListener("click", function () {
-                    const newPageURL = "blog.html";
-
-                    // Open the new webpage in the same tab
-                    window.open(newPageURL, "_self");
-                });
-            </script>
-        </p>
-    </div>
-</div>
-<!-- End window -->
+<!-- Legacy calc window removed; use the new News/Blog iframe window instead -->
 <!-- Start Privacy window -->
 <div class="window drag res" id="privacy" style="display: none;">
     <div class="title-bar">
@@ -378,12 +364,12 @@
 <!-- Start TaskBar -->
 <div class="window" id="taskbar">
     <div id="start">
-        <button class="startbtn" id="start"><img
-                src="https://win98icons.alexmeub.com/icons/png/windows-0.png" /><span>Start</span></button>
+    <button class="startbtn" id="startbtn"><img
+        src="images/logo.png" /><span>Start</span></button>
     </div>
     <div id="items">
         <button class="tbtab active" id="welcometab"><span>Welcome!</span></button>
-        <button class="tbtab" id="calctab" style="display:none;"><span>News/Blog</span></button>
+    <!-- calctab removed -->
         <button class="tbtab" id="mailingListtab" style="display:none;"><span>Mailing List</span></button>
         <button class="tbtab" id="kywytab" style="display:none;"><span>Kywy</span></button>
         <!-- <button class="tbtab" id="Model3Dtab" style="display:none;"><span>3D Model</span></button> -->
@@ -410,6 +396,7 @@
     <!-- End Taskbar -->
     <!-- start menu -->
     <ul id="menu" class="ui-menu" style="display:none;">
+        
         <li class="ui-menu-item" id="welcomembtn">
             <div class="ui-menu-item-wrapper" style=" font-size: 14px; font-weight: bold; "><span
                     class="ui-icon ui-icon-info"></span>
@@ -417,42 +404,100 @@
             </div>
         </li>
         <hr>
-        <li class="ui-menu-item" id="kywybtn" style=" font-size: 14px;">
-            <div class="ui-menu-item-wrapper"><span class="ui-icon  ui-icon-star"></span> 🥝 Store </div>
-        </li>
+    <!-- Store removed -->
         <li class="ui-menu-item" id="calcbtn" style=" font-size: 14px;">
-            <div class="ui-menu-item-wrapper"><span class="ui-icon  ui-icon-star"></span>🔍 News/Blog
-        </li>
-        <li class="ui-menu-item" id="mailingListbtn" style=" font-size: 14px;">
-            <div class="ui-menu-item-wrapper"><span class="ui-icon ui-icon-circle-plus"></span> 📧 Mailing List
-            </div>
+            <div class="ui-menu-item-wrapper"><span class="ui-icon  ui-icon-star"></span>🔍 News/Blog</div>
         </li>
         <li class="ui-menu-item" id="contactbtn" style=" font-size: 14px;">
-            <div class="ui-menu-item-wrapper"><span class="ui-icon  ui-icon-star"></span> 🌐 Community</div>
+            <div class="ui-menu-item-wrapper"><span class="ui-icon  ui-icon-star"></span> 💬 Discord</div>
         </li>
-        <!-- <li class="ui-menu-item" id="Model3Dbtn" style=" font-size: 14px;">
-         <div class="ui-menu-item-wrapper"><span class="ui-icon ui-icon-circle-plus"></span> 📦 3D Model
-         </div>
-         </li> -->
         <li class="ui-menu-item" id="theteambtn" style=" font-size: 14px;">
             <div class="ui-menu-item-wrapper"><span class="ui-icon  ui-icon-star"></span> ✋ The Team </div>
         </li>
-        <!-- <li class="ui-menu-item" id="browserbtn" style=" font-size: 14px;">
-                <div class="ui-menu-item-wrapper"><span class="ui-icon ui-icon-circle-zoomout"></span> 📱 Browser
-                </div>
-            </li> -->
         <li class="ui-menu-item" id="snakebtn" style=" font-size: 14px;">
             <div class="ui-menu-item-wrapper"><span class="ui-icon  ui-icon-star"></span> 🐍 Snake</div>
         </li>
         <li class="ui-menu-item" id="githubbtn" style=" font-size: 14px;">
             <div class="ui-menu-item-wrapper"><span class="ui-icon  ui-icon-star"></span> 😸 Github</div>
         </li>
-
+        <li class="ui-menu-item" id="paintbtn" style=" font-size: 14px;">
+            <div class="ui-menu-item-wrapper"><span class="ui-icon ui-icon-pencil"></span> 🖌️ Paint</div>
+        </li>
+        <li class="ui-menu-item" id="docsbtn" style=" font-size: 14px;">
+            <div class="ui-menu-item-wrapper"><span class="ui-icon ui-icon-document"></span> 📄 KYWY Docs</div>
+        </li>
         <li class="ui-menu-item" id="privacybtn" style=" font-size: 14px;">
             <div class="ui-menu-item-wrapper"><span class="ui-icon  ui-icon-star"></span> 🔒 Privacy Policy</div>
         </li>
     </ul>
     <!-- end menu -->
+
+    <!-- Paint Window -->
+    <div class="window drag res" id="paintwindow" style="display: none; width: 600px; height: 400px; top: 180px; left: 120px;">
+    <div class="title-bar">
+        <div class="title-bar-text">Paint</div>
+        <div class="title-bar-controls">
+            <button aria-label="Close" id="paintclose"></button>
+        </div>
+    </div>
+    <div class="window-body" style="height: 340px; padding: 0;">
+        <iframe src="https://tools.kywy.io/drawing-editor.html" style="width:100%; height:100%; border:none;"></iframe>
+    </div>
+</div>
+<!-- Blog Window -->
+<div class="window drag res" id="blogwindow" style="display: none; width: 600px; height: 400px; top: 220px; left: 160px;">
+    <div class="title-bar">
+        <div class="title-bar-text">News/Blog</div>
+        <div class="title-bar-controls">
+            <button aria-label="Close" id="blogclose"></button>
+        </div>
+    </div>
+    <div class="window-body" style="height: 340px; padding: 0;">
+        <iframe src="blog.html" style="width:100%; height:100%; border:none;"></iframe>
+    </div>
+</div>
+<!-- Github Window -->
+<div class="window drag res" id="githubwindow" style="display: none; width: 600px; height: 400px; top: 240px; left: 180px;">
+    <div class="title-bar">
+        <div class="title-bar-text">Github</div>
+        <div class="title-bar-controls">
+            <button aria-label="Close" id="githubclose"></button>
+        </div>
+    </div>
+    <div class="window-body" style="height: 340px; padding: 0;">
+        <div class="iframe-fallback">
+            <div>
+                <p>GitHub won't allow embedding via iframe. Open in a new tab:</p>
+                <button onclick="window.open('https://github.com/KOINSLOT-Inc', '_blank')">Open GitHub</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- KYWY Docs Window -->
+<div class="window drag res" id="docswindow" style="display: none; width: 600px; height: 400px; top: 280px; left: 220px;">
+    <div class="title-bar">
+        <div class="title-bar-text">KYWY Docs</div>
+        <div class="title-bar-controls">
+            <button aria-label="Close" id="docsclose"></button>
+        </div>
+    </div>
+    <div class="window-body" style="height: 340px; padding: 0;">
+        <iframe src="https://docs.kywy.io" style="width:100%; height:100%; border:none;"></iframe>
+    </div>
+</div>
+<!-- Privacy Policy Window -->
+<div class="window drag res" id="privacywindow" style="display: none; width: 600px; height: 400px; top: 260px; left: 200px;">
+    <div class="title-bar">
+        <div class="title-bar-text">Privacy Policy</div>
+        <div class="title-bar-controls">
+            <button aria-label="Close" id="privacywindowclose"></button>
+        </div>
+    </div>
+    <div class="window-body" style="height: 340px; padding: 0;">
+        <iframe src="legal.html" style="width:100%; height:100%; border:none;"></iframe>
+    </div>
+</div>
+    <!-- end menu closing cleaned up earlier -->
 </div>
 </div>
 <div class="page">
@@ -482,6 +527,7 @@
     <script src="98footer.js"></script>
     <script src="starthere.js"></script>
     <script src="dpad.js"></script>
+    <script src="desktop.js"></script>
 </div>
 <script></script>
 </body>
