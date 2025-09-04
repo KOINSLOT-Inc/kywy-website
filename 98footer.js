@@ -93,7 +93,7 @@ $(document).on('click', '.tbtab', function (e) {
     var $win = $('#' + winId);
     if (!$win.length) return;
     if ($win.is(':visible')) {
-        // minimize/hide
+        // minimize/hide (consistent for all windows)
         $win.removeClass('active');
         $win.fadeOut(40);
         $(this).removeClass('active');
@@ -114,16 +114,7 @@ function ensureTaskbarTab(windowId, label) {
     var tabId = windowId + 'tab';
     if ($('#' + tabId).length) return;
     var $btn = $('<button/>', { class: 'tbtab', id: tabId }).html('<span>' + label + '</span>');
-    $btn.on('click', function () {
-        var $w = $('#' + windowId);
-        if ($w.is(':visible')) {
-            // toggle minimize
-            $w.toggle();
-        } else {
-            $w.fadeIn(40);
-            bringToFront($w);
-        }
-    });
+    // Tab click logic is handled globally for .tbtab, so no need to add another click handler here
     $('#items').append($btn);
 }
 
@@ -279,34 +270,40 @@ $("#theteambtn").click(function () {
 $('#docsclose').on("click", function () {
     $('#docswindow').removeClass("active");
     $('#docswindow').fadeOut(40);
+    $('#docswindowtab').remove();
 });
 $("#docsbtn").click(function () {
     $('#menu').fadeOut(40);
     $('#docswindow').fadeIn(40);
     $('#docswindow').addClass("active");
+    bringToFront($('#docswindow'));
 });
 
 // Privacy Policy window open/close
 $('#privacywindowclose').on("click", function () {
     $('#privacywindow').removeClass("active");
     $('#privacywindow').fadeOut(40);
+    $('#privacywindowtab').remove();
 });
 $("#privacybtn").click(function () {
     $('#menu').fadeOut(40);
     $('#privacywindow').fadeIn(40);
     $('#privacywindow').addClass("active");
+    bringToFront($('#privacywindow'));
 });
 
 // Paint window open/close
 $('#paintclose').on("click", function () {
     $('#paintwindow').removeClass("active");
     $('#paintwindow').fadeOut(40);
+    $('#paintwindowtab').remove();
 });
 
 $("#paintbtn").click(function () {
     $('#menu').fadeOut(40);
     $('#paintwindow').fadeIn(40);
     $('#paintwindow').addClass("active");
+    bringToFront($('#paintwindow'));
 });
 
 // Model3D //
