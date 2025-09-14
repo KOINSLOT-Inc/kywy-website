@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -99,6 +99,10 @@
         <img src="https://cdn.arduino.cc/header-footer/prod/assets/favicon-arduino/favicon.ico" alt="Arduino IDE">
         <div class="icon-label">Arduino IDE</div>
     </a>
+    <div class="desktop-icon" id="featured-games-desktop-icon">
+        <div class="emoji-icon">🎮</div>
+        <div class="icon-label">Games</div>
+    </div>
 </div>
 
 <!-- Selection Box -->
@@ -428,6 +432,9 @@
         <li class="ui-menu-item" id="privacybtn" style=" font-size: 14px;">
             <div class="ui-menu-item-wrapper">🔒 Privacy Policy</div>
         </li>
+        <li class="ui-menu-item" id="featured-games-btn" style=" font-size: 14px;">
+            <div class="ui-menu-item-wrapper">🎮 Games</div>
+        </li>
     </ul>
     <!-- end menu -->
 
@@ -494,6 +501,18 @@
     </div>
     <div class="window-body" style="height: 340px; padding: 0;">
         <iframe src="legal.html" style="width:100%; height:100%; border:none;"></iframe>
+    </div>
+</div>
+<!-- Featured Games Window -->
+<div class="window drag res" id="featured-games-window" style="display: none; width: 1000px; height: 800px; top: 80px; left: 80px;">
+    <div class="title-bar">
+        <div class="title-bar-text">Games</div>
+        <div class="title-bar-controls">
+            <button aria-label="Close" id="featured-games-close"></button>
+        </div>
+    </div>
+    <div class="window-body" style="height: 740px; padding: 0; overflow: hidden;">
+        <iframe src="featured-games.html" style="width:100%; height:100%; border:none; overflow: auto;"></iframe>
     </div>
 </div>
     <!-- end menu closing cleaned up earlier -->

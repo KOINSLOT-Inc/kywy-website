@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games - KYWY</title>
+    <meta name="description" content="Featured games for the KYWY device" />
+    <meta name="keywords" content="KYWY, games, retro gaming" />
+    <meta name="author" content="Ethan Lannan" />
+
+    <!-- Favicon -->
+    <link rel="icon" href="images/logo_image.jpg" type="image/x-icon">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" type="text/css" href="kywy.css" />
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <link rel="stylesheet" href="https://unpkg.com/98.css@0.1.4/build/98.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Silkscreen&display=swap">
+
+    <style>
+        /* Featured Games specific styles */
+        body {
+            font-family: 'Silkscreen', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            cursor: url("images/cursor.jpg"), auto;
+            overflow-x: hidden;
+            overflow-y: auto;
+            min-height: 100vh;
+        }
+
+        /* Ensure scrolling works in iframe */
+        html, body {
+            height: 100%;
+        }
+
+        /* Page-level scrolling: let the body handle overflow so iframe shows one scrollbar */
+        body {
+            overflow-y: auto;
+        }
+
+        /* Disable star background for iframe */
+        #stars, #stars1, #stars2, #stars3 {
+            display: none !important;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            margin-bottom: 20px;
+        }
+
+        .kywy_header_text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .kywy_header_text button {
+            background-color: #c9c9c9;
+            border: 2px outset #c9c9c9;
+            padding: 8px 16px;
+            font-family: 'Silkscreen', sans-serif;
+            font-size: 12px;
+            cursor: url("images/cursor.jpg"), pointer;
+            color: #000;
+        }
+
+        .kywy_header_text button:hover {
+            background-color: #ddd;
+        }
+
+        .kywy_header_text img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .games-container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            padding-bottom: 100px; /* Extra space at bottom */
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .game-card {
+            background-color: #c9c9c9;
+            border: 2px inset #c9c9c9;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            color: #000;
+            transition: all 0.2s ease;
+        }
+
+        .game-card:hover {
+            box-shadow: 5px 5px 10px rgba(0,0,0,0.4);
+            transform: translate(-2px, -2px);
+        }
+
+        .game-card img {
+            max-width: 100%;
+            height: 120px;
+            object-fit: contain;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            background-color: #000;
+            padding: 5px;
+        }
+
+        .game-card h3 {
+            margin: 10px 0;
+            font-size: 18px;
+            color: #000;
+            text-shadow: 1px 1px 0px #fff;
+        }
+
+        .game-card p {
+            margin: 6px 0;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .game-card a {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 8px 14px;
+            background-color: #008080;
+            color: #fff;
+            text-decoration: none;
+            border: 2px outset #008080;
+            font-family: 'Silkscreen', sans-serif;
+            font-size: 13px;
+            cursor: url("images/cursor.jpg"), pointer;
+            transition: all 0.2s ease;
+        }
+
+        .game-card a:hover {
+            background-color: #00a0a0;
+            border-color: #00a0a0;
+            box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .loading {
+            text-align: center;
+            font-size: 16px;
+            margin-top: 50px;
+            color: #fff;
+        }
+
+        .error {
+            color: #ff6b6b;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border: 2px solid #ff6b6b;
+            margin: 20px;
+        }
+
+        .scrollable-content {
+            max-height: 100vh;
+            overflow-y: auto;
+            width: 100%;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .games-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 15px;
+            }
+
+            .game-card {
+                padding: 10px;
+            }
+
+            .game-card img {
+                height: 100px;
+            }
+        }
+
+        /* Star background animation */
+        #stars {
+            width: 1px;
+            height: 1px;
+            background: transparent;
+            background-size: cover;
+            animation: animStar 50s linear infinite;
+            box-shadow: 779px 1331px #fff, 324px 42px #fff, 303px 586px #fff,
+                1312px 276px #13c2b9, 451px 625px #fff, 521px 1931px #fff, 1087px 1871px #fff,
+                36px 1546px #fff, 132px 934px #fff, 1698px 901px #fff, 1418px 664px #fff,
+                1448px 1157px #fff, 1084px 232px #fff, 347px 1776px #fff, 1722px 243px #fff,
+                1629px 835px #fff, 479px 969px #fff, 1231px 960px #fff, 586px 384px #fff,
+                164px 527px #fff, 8px 646px #fff, 1150px 1126px #fff, 665px 1357px #fff,
+                1556px 1982px #fff, 1260px 1961px #fff, 1675px 1741px #fff,
+                1843px 1514px #fff, 718px 1628px #fff, 242px 1343px #fff, 1497px 1880px #fff,
+                1364px 230px #fff, 1739px 1302px #fff, 636px 959px #fff, 304px 686px #fff,
+                614px 751px #fff, 1935px 816px #fff, 1428px 60px #fff, 355px 335px #fff,
+                1594px 158px #fff, 90px 60px #fff, 1553px 162px #fff, 1239px 1825px #fff,
+                1945px 587px #fff, 749px 1785px #fff, 1987px 1172px #fff, 1301px 1237px #fff,
+                1039px 342px #fff, 1585px 1481px #fff, 995px 1048px #fff, 524px 932px #fff,
+                214px 413px #fff, 1701px 1300px #fff, 1037px 1613px #fff, 1871px 996px #fff,
+                1360px 1635px #fff, 1110px 1313px #fff, 412px 1783px #fff, 1949px 177px #fff;
+        }
+
+        #stars1 {
+            width: 1px;
+            height: 1px;
+            background: transparent;
+            background-size: cover;
+            animation: animStar 100s linear infinite;
+            box-shadow: 779px 1331px #fff, 324px 42px #fff, 303px 586px #fff,
+                1312px 276px #13c2b9, 451px 625px #fff, 521px 1931px #fff, 1087px 1871px #fff,
+                36px 1546px #fff, 132px 934px #fff, 1698px 901px #fff, 1418px 664px #fff,
+                1448px 1157px #fff, 1084px 232px #fff, 347px 1776px #fff, 1722px 243px #fff,
+                1629px 835px #fff, 479px 969px #fff, 1231px 960px #fff, 586px 384px #fff,
+                164px 527px #fff, 8px 646px #fff, 1150px 1126px #fff, 665px 1357px #fff,
+                1556px 1982px #fff, 1260px 1961px #fff, 1675px 1741px #fff,
+                1843px 1514px #fff, 718px 1628px #fff, 242px 1343px #fff, 1497px 1880px #fff,
+                1364px 230px #fff, 1739px 1302px #fff, 636px 959px #fff, 304px 686px #fff,
+                614px 751px #fff, 1935px 816px #fff, 1428px 60px #fff, 355px 335px #fff,
+                1594px 158px #fff, 90px 60px #fff, 1553px 162px #fff, 1239px 1825px #fff,
+                1945px 587px #fff, 749px 1785px #fff, 1987px 1172px #fff, 1301px 1237px #fff,
+                1039px 342px #fff, 1585px 1481px #fff, 995px 1048px #fff, 524px 932px #fff,
+                214px 413px #fff, 1701px 1300px #fff, 1037px 1613px #fff, 1871px 996px #fff,
+                1360px 1635px #fff, 1110px 1313px #fff, 412px 1783px #fff, 1949px 177px #fff;
+        }
+
+        #stars2 {
+            width: 1px;
+            height: 1px;
+            background: transparent;
+            background-size: cover;
+            animation: animStar 150s linear infinite;
+            box-shadow: 779px 1331px #fff, 324px 42px #fff, 303px 586px #fff,
+                1312px 276px #13c2b9, 451px 625px #fff, 521px 1931px #fff, 1087px 1871px #fff,
+                36px 1546px #fff, 132px 934px #fff, 1698px 901px #fff, 1418px 664px #fff,
+                1448px 1157px #fff, 1084px 232px #fff, 347px 1776px #fff, 1722px 243px #fff,
+                1629px 835px #fff, 479px 969px #fff, 1231px 960px #fff, 586px 384px #fff,
+                164px 527px #fff, 8px 646px #fff, 1150px 1126px #fff, 665px 1357px #fff,
+                1556px 1982px #fff, 1260px 1961px #fff, 1675px 1741px #fff,
+                1843px 1514px #fff, 718px 1628px #fff, 242px 1343px #fff, 1497px 1880px #fff,
+                1364px 230px #fff, 1739px 1302px #fff, 636px 959px #fff, 304px 686px #fff,
+                614px 751px #fff, 1935px 816px #fff, 1428px 60px #fff, 355px 335px #fff,
+                1594px 158px #fff, 90px 60px #fff, 1553px 162px #fff, 1239px 1825px #fff,
+                1945px 587px #fff, 749px 1785px #fff, 1987px 1172px #fff, 1301px 1237px #fff,
+                1039px 342px #fff, 1585px 1481px #fff, 995px 1048px #fff, 524px 932px #fff,
+                214px 413px #fff, 1701px 1300px #fff, 1037px 1613px #fff, 1871px 996px #fff,
+                1360px 1635px #fff, 1110px 1313px #fff, 412px 1783px #fff, 1949px 177px #fff;
+        }
+
+        #stars3 {
+            width: 1px;
+            height: 1px;
+            background: transparent;
+            background-size: cover;
+            animation: animStar 200s linear infinite;
+            box-shadow: 779px 1331px #fff, 324px 42px #fff, 303px 586px #fff,
+                1312px 276px #13c2b9, 451px 625px #fff, 521px 1931px #fff, 1087px 1871px #fff,
+                36px 1546px #fff, 132px 934px #fff, 1698px 901px #fff, 1418px 664px #fff,
+                1448px 1157px #fff, 1084px 232px #fff, 347px 1776px #fff, 1722px 243px #fff,
+                1629px 835px #fff, 479px 969px #fff, 1231px 960px #fff, 586px 384px #fff,
+                164px 527px #fff, 8px 646px #fff, 1150px 1126px #fff, 665px 1357px #fff,
+                1556px 1982px #fff, 1260px 1961px #fff, 1675px 1741px #fff,
+                1843px 1514px #fff, 718px 1628px #fff, 242px 1343px #fff, 1497px 1880px #fff,
+                1364px 230px #fff, 1739px 1302px #fff, 636px 959px #fff, 304px 686px #fff,
+                614px 751px #fff, 1935px 816px #fff, 1428px 60px #fff, 355px 335px #fff,
+                1594px 158px #fff, 90px 60px #fff, 1553px 162px #fff, 1239px 1825px #fff,
+                1945px 587px #fff, 749px 1785px #fff, 1987px 1172px #fff, 1301px 1237px #fff,
+                1039px 342px #fff, 1585px 1481px #fff, 995px 1048px #fff, 524px 932px #fff,
+                214px 413px #fff, 1701px 1300px #fff, 1037px 1613px #fff, 1871px 996px #fff,
+                1360px 1635px #fff, 1110px 1313px #fff, 412px 1783px #fff, 1949px 177px #fff;
+        }
+
+        @keyframes animStar {
+            from {
+                transform: translateY(0px);
+            }
+            to {
+                transform: translateY(-2000px);
+            }
+        }
+    </style>
+</head>
+<body onload="startTime()">
+<script>
+// Minimal fallback if startTime is not defined by the parent
+if (typeof startTime !== 'function') {
+    function startTime() { /* no-op fallback for standalone */ }
+}
+</script>
+
+<div class="content-wrapper">
+  <div class="scrollable-content" style="max-height: 100vh; overflow-y: auto;">
+    <div class="header">
+        <div class="kywy_header_text">
+            <button onclick="window.location.href='https://kywy.io';">Back to Home</button>
+            <img src="./images/kywyblogheader.png" alt="KYWY Games">
+        </div>
+    </div>
+
+    <div class="games-container">
+        <h1 style="text-align: center; color: #fff; text-shadow: 2px 2px 4px #000; margin-bottom: 30px;">🎮 Games</h1>
+        <div style="text-align: center; margin-bottom: 12px;">
+            <button id="enter-programming-mode" style="background:#c9c9c9; border:2px outset #c9c9c9; padding:8px 12px; font-family:'Silkscreen',sans-serif; cursor:pointer;">Put KYWY in Programming Mode</button>
+            <div id="prog-status" style="color:#fff; margin-top:8px; font-size:12px;"></div>
+        </div>
+        <div id="games-container-inner">
+            <div class="loading">Loading games...</div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    const repos = [
+        { name: 'kywy', repo: 'KOINSLOT-Inc/kywy', displayName: 'KYWY Games' },
+        { name: 'kywy-rust', repo: 'KOINSLOT-Inc/kywy-rust', displayName: 'KYWY Rust Games' }
+    ];
+
+    const splashRepo = 'KOINSLOT-Inc/kywy-loader';
+    const splashPath = 'splash';
+
+    // Mapping of game names to splash art
+    const splashMapping = {
+        '2DTennis': '2DTennis.png',
+        'Asteroids': 'KywyRust.bmp',
+        'Clicker': 'default.bmp',
+        'I2CScan': 'default.bmp',
+        'SlimeJumper': 'SlimeJumper.bmp',
+        'Snake': 'snake.bmp',
+        'SoilSensor': 'default.bmp',
+        'Spelunker': 'Spelunker.bmp',
+        'bricks': 'bricks.bmp',
+        'hello_world': 'default.bmp',
+        'menu': 'default.bmp',
+        'sprite_test': 'default.bmp'
+    };
+
+    async function fetchLatestRelease(repo) {
+        const response = await fetch(`https://api.github.com/repos/${repo}/releases/latest`);
+        if (!response.ok) throw new Error(`Failed to fetch release for ${repo}`);
+        return await response.json();
+    }
+
+    async function fetchSplashArt() {
+        const response = await fetch(`https://api.github.com/repos/${splashRepo}/contents/${splashPath}`);
+        if (!response.ok) throw new Error('Failed to fetch splash art');
+        const files = await response.json();
+        const splashMap = {};
+        files.forEach(file => {
+            splashMap[file.name] = file.download_url;
+        });
+        return splashMap;
+    }
+
+    function getGameNameFromUF2(filename) {
+        // Remove .ino.uf2 or .uf2 extension and clean up name
+        return filename.replace('.ino.uf2', '').replace('.uf2', '');
+    }
+
+    function getSplashArt(gameName, splashArts) {
+        const splashFile = splashMapping[gameName];
+        return splashArts[splashFile] || splashArts['default.bmp'];
+    }
+
+    async function loadGames() {
+        const container = document.getElementById('games-container-inner');
+        container.innerHTML = '<div class="loading">Loading games...</div>';
+
+        try {
+            const [splashArts, ...releases] = await Promise.all([
+                fetchSplashArt(),
+                ...repos.map(r => fetchLatestRelease(r.repo))
+            ]);
+
+            const allGames = [];
+
+            repos.forEach((repo, index) => {
+                const release = releases[index];
+                const uf2Assets = release.assets.filter(asset => asset.name.endsWith('.uf2'));
+
+                uf2Assets.forEach(asset => {
+                    const gameName = getGameNameFromUF2(asset.name);
+                    const splashUrl = getSplashArt(gameName, splashArts);
+
+                    allGames.push({
+                        name: gameName,
+                        displayName: gameName.replace(/([A-Z])/g, ' $1').trim(), // Add spaces before capitals
+                        repoName: repo.displayName,
+                        downloadUrl: asset.browser_download_url,
+                        splashUrl: splashUrl,
+                        downloadCount: asset.download_count
+                    });
+                });
+            });
+
+            container.innerHTML = '<div class="games-grid">' +
+                allGames.map(game => `
+                    <div class="game-card">
+                        <img src="${game.splashUrl}" alt="${game.name} splash" onerror="this.src='${splashArts['default.bmp']}'">
+                        <h3>${game.displayName}</h3>
+                        <p><strong>${game.repoName}</strong></p>
+                        <a href="${game.downloadUrl}" download>Download UF2</a>
+                    </div>
+                `).join('') +
+                '</div>';
+        } catch (error) {
+            container.innerHTML = `<div class="error">Error loading games: ${error.message}</div>`;
+        }
+    }
+
+    window.onload = loadGames;
+</script>
+
+<script>
+// Web Serial API: put KYWY into programming mode by opening at 1200 baud briefly
+async function touch1200(port) {
+    try {
+        await port.open({ baudRate: 1200 });
+        await new Promise(r => setTimeout(r, 200));
+        await port.close();
+        return true;
+    } catch (err) {
+        console.error('Error touching 1200 baud:', err);
+        try { if (port && port.readable) await port.close(); } catch(e){}
+        return false;
+    }
+}
+
+async function enterProgrammingMode() {
+    const status = document.getElementById('prog-status');
+    if (!('serial' in navigator)) {
+        status.textContent = 'Web Serial API not supported in this browser.';
+        return;
+    }
+
+    try {
+        status.textContent = 'Requesting serial port...';
+        const port = await navigator.serial.requestPort();
+        status.textContent = 'Opening port at 1200 baud...';
+        const ok = await touch1200(port);
+        if (ok) {
+            status.innerHTML = 'Success — you can now copy a UF2 file to your KYWY.';
+        } else {
+            status.innerHTML = 'Failed to toggle port. Check permissions and try again. Learn more: <a href="https://docs.kywy.io/troubleshooting/" target="_blank" style="color:#9cf;">Troubleshooting</a>';
+        }
+    } catch (err) {
+        console.error(err);
+        status.textContent = 'Serial request cancelled or failed.';
+    }
+}
+
+const progBtn = document.getElementById('enter-programming-mode');
+if (progBtn) progBtn.addEventListener('click', enterProgrammingMode);
+</script>
+
+</body>
+</html>

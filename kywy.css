@@ -398,6 +398,27 @@ body {
     font-size: 13px;
 
     line-height: 23px;
+}
+
+/* Position the "Start here" helper graphic above the start button */
+.startHere {
+    position: fixed;
+    left: 8px;             /* small offset from left edge to align with start button */
+    bottom: 48px;         /* place just above the taskbar (taskbar sits at bottom:0) */
+    z-index: 2305;        /* above taskbar which uses z-index ~2200 */
+    pointer-events: auto; /* allow clicks to dismiss it */
+}
+
+.startHere img {
+    display: block;
+    width: auto;
+    height: 56px;         /* adjust as needed to visually match the start button */
+    max-width: 160px;
+}
+
+@media (max-width: 600px) {
+    .startHere { left: 6px; bottom: 56px; }
+    .startHere img { height: 48px; }
 
 }
 

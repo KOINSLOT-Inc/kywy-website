@@ -535,6 +535,7 @@ addFullscreenButton('blogwindow', 'iframe', 'blog.html');
 addFullscreenButton('githubwindow', 'iframe', 'https://github.com/KOINSLOT-Inc');
 addFullscreenButton('docswindow', 'iframe', 'https://docs.kywy.io');
 addFullscreenButton('privacywindow', 'iframe', 'legal.html');
+addFullscreenButton('featured-games-window', 'iframe', 'featured-games.html');
 
 // Fix window opening so windows stay open after start menu closes
 $('#paintbtn').click(function () {
@@ -604,5 +605,27 @@ $('#privacybtn').click(function () {
 $('#privacywindowclose').on("click", function () {
     $('#privacywindow').removeClass('active');
     $('#privacywindow').fadeOut(40);
+});
+
+$('#featured-games-btn').click(function () {
+    $('#featured-games-window').fadeIn(40);
+    $('#featured-games-window').addClass('active');
+    ensureTaskbarTab('featured-games-window', 'Games');
+    bringToFront($('#featured-games-window'));
+    addIframeOverlay('featured-games-window');
+});
+$('#featured-games-close').on("click", function () {
+    $('#featured-games-window').removeClass('active');
+    $('#featured-games-window').fadeOut(40);
+    $('#featured-games-windowtab').remove();
+});
+
+// Desktop icon handler for Featured Games
+$('#featured-games-desktop-icon').on('click', function () {
+    $('#featured-games-window').fadeIn(40);
+    $('#featured-games-window').addClass('active');
+    ensureTaskbarTab('featured-games-window', 'Games');
+    bringToFront($('#featured-games-window'));
+    addIframeOverlay('featured-games-window');
 });
 
