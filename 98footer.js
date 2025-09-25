@@ -34,7 +34,51 @@ $(function () {
     // Prevent text selection and desktop selection when clicking on windows
     $(".window").on('mousedown', function(e) {
         e.stopPropagation(); // Prevent desktop selection
-        bringToFront($(this));
+        var $win = $(this);
+        // Immediate focus for responsive feel
+        bringToFront($win);
+        
+        // If clicking on an iframe, ensure it gets focus too
+        if ($(e.target).is('iframe') || $(e.target).closest('iframe').length) {
+            setTimeout(function() {
+                var $iframe = $win.find('iframe');
+                if ($iframe.length) {
+                    try {
+                        $iframe[0].focus();
+                        if ($iframe[0].contentWindow) {
+                            $iframe[0].contentWindow.focus();
+                        }
+                    } catch(ex) {
+                        // Cross-origin access denied, that's okay
+                    }
+                }
+            }, 50);
+        }
+    });
+    
+    // Enhanced scroll handling - allow scrolling any window under the mouse
+    // Since we now allow pointer-events on all iframes, scrolling should work naturally
+    // But we can still track hover for any additional scroll optimizations
+    var $hoveredWindow = null;
+    
+    $('.window').not('#taskbar').on('mouseenter', function() {
+        $hoveredWindow = $(this);
+    }).on('mouseleave', function() {
+        if ($hoveredWindow && $hoveredWindow.is($(this))) {
+            $hoveredWindow = null;
+        }
+    });
+    
+    // Optional: ensure iframe gets focus when mouse enters for better scroll responsiveness
+    $('.window iframe').on('mouseenter', function() {
+        var $iframe = $(this);
+        setTimeout(function() {
+            try {
+                $iframe[0].focus();
+            } catch(e) {
+                // Cross-origin restriction, that's fine
+            }
+        }, 10);
     });
 });
 
@@ -57,15 +101,50 @@ function bringToFront($win) {
     if ($("#" + activetab).length) {
         $("#" + activetab).addClass("active");
     }
-    // make only the active window's iframe interactive
+    // make only the active window's iframe fully interactive, but allow hover for scrolling
     $('.window').not('#taskbar').each(function () {
         var $w = $(this);
         var $ifr = $w.find('iframe');
         if (!$ifr.length) return;
         if ($w.is($win)) {
             $ifr.css('pointer-events', 'auto');
+            // Remove click blocker from active window
+            $w.find('.click-blocker').remove();
+            // Focus the iframe after a brief delay to ensure it's ready
+            setTimeout(function() {
+                try {
+                    $ifr[0].focus();
+                    // If we can access the iframe content, focus it too
+                    if ($ifr[0].contentWindow) {
+                        $ifr[0].contentWindow.focus();
+                    }
+                } catch(e) {
+                    // Cross-origin iframe, can't focus content but that's okay
+                }
+            }, 100);
         } else {
-            $ifr.css('pointer-events', 'none');
+            // Allow hover and scrolling on inactive windows, but prevent clicks from going through
+            $ifr.css('pointer-events', 'auto');
+            // Add a click-blocking overlay for inactive windows
+            if (!$w.find('.click-blocker').length) {
+                $w.find('.window-body').css('position', 'relative');
+                var $blocker = $('<div class="click-blocker"></div>').css({
+                    'position': 'absolute',
+                    'top': 0,
+                    'left': 0,
+                    'width': '100%',
+                    'height': '100%',
+                    'z-index': 10,
+                    'background': 'transparent',
+                    'pointer-events': 'auto'
+                });
+                $blocker.on('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    bringToFront($w);
+                });
+                $w.find('.window-body').append($blocker);
+            }
         }
     });
 
@@ -324,7 +403,9 @@ $("#paintbtn").click(function () {
     $('#menu').fadeOut(40);
     $('#paintwindow').fadeIn(40);
     $('#paintwindow').addClass("active");
-    bringToFront($('#paintwindow'));
+    setTimeout(function() {
+        bringToFront($('#paintwindow'));
+    }, 150);
 });
 
 // Model3D //
@@ -565,7 +646,9 @@ $('#calcbtn').click(function () {
     $('#blogwindow').fadeIn(40);
     $('#blogwindow').addClass('active');
     ensureTaskbarTab('blogwindow', 'Blog');
-    bringToFront($('#blogwindow'));
+    setTimeout(function() {
+        bringToFront($('#blogwindow'));
+    }, 150);
     addIframeOverlay('blogwindow');
 });
 $('#blogclose').on("click", function () {
@@ -593,7 +676,9 @@ $('#docsbtn').click(function () {
     $('#docswindow').fadeIn(40);
     $('#docswindow').addClass('active');
     ensureTaskbarTab('docswindow', 'Docs');
-    bringToFront($('#docswindow'));
+    setTimeout(function() {
+        bringToFront($('#docswindow'));
+    }, 150);
     addIframeOverlay('docswindow');
 });
 // Discord
@@ -622,7 +707,10 @@ $('#featured-games-btn').click(function () {
     $('#featured-games-window').fadeIn(40);
     $('#featured-games-window').addClass('active');
     ensureTaskbarTab('featured-games-window', 'Games');
-    bringToFront($('#featured-games-window'));
+    // Delay the focus to ensure iframe is loaded
+    setTimeout(function() {
+        bringToFront($('#featured-games-window'));
+    }, 150);
     addIframeOverlay('featured-games-window');
 });
 $('#featured-games-close').on("click", function () {
@@ -690,7 +778,10 @@ $('#paypal-store-btn').click(function () {
     $('#paypal-store-window').fadeIn(40);
     $('#paypal-store-window').addClass('active');
     ensureTaskbarTab('paypal-store-window', 'KYWY Store');
-    bringToFront($('#paypal-store-window'));
+    // Delay the focus to ensure iframe is loaded
+    setTimeout(function() {
+        bringToFront($('#paypal-store-window'));
+    }, 150);
     addIframeOverlay('paypal-store-window');
 });
 $('#paypal-store-close').on("click", function () {
@@ -703,8 +794,11 @@ $('#paypal-store-close').on("click", function () {
 $('#classroom-donate-btn').click(function () {
     $('#classroom-donate-window').fadeIn(40);
     $('#classroom-donate-window').addClass('active');
-    ensureTaskbarTab('classroom-donate-window', 'KYWY Classroom');
-    bringToFront($('#classroom-donate-window'));
+    ensureTaskbarTab('classroom-donate-window', 'KYWY in the Classroom');
+    // Delay the focus to ensure iframe is loaded
+    setTimeout(function() {
+        bringToFront($('#classroom-donate-window'));
+    }, 150);
     addIframeOverlay('classroom-donate-window');
 });
 $('#classroom-donate-close').on("click", function () {
@@ -718,14 +812,29 @@ $('#paypal-store-desktop-icon').on('click', function () {
     $('#paypal-store-window').fadeIn(40);
     $('#paypal-store-window').addClass('active');
     ensureTaskbarTab('paypal-store-window', 'KYWY Store');
-    bringToFront($('#paypal-store-window'));
+    setTimeout(function() {
+        bringToFront($('#paypal-store-window'));
+    }, 150);
     addIframeOverlay('paypal-store-window');
 });
 
 $('#classroom-donate-desktop-icon').on('click', function () {
     $('#classroom-donate-window').fadeIn(40);
     $('#classroom-donate-window').addClass('active');
-    ensureTaskbarTab('classroom-donate-window', 'KYWY Classroom');
-    bringToFront($('#classroom-donate-window'));
+    ensureTaskbarTab('classroom-donate-window', 'KYWY in the Classroom');
+    setTimeout(function() {
+        bringToFront($('#classroom-donate-window'));
+    }, 150);
     addIframeOverlay('classroom-donate-window');
+});
+
+// KYWY Docs desktop icon handler
+$('#docs-desktop-icon').on('click', function () {
+    $('#docswindow').fadeIn(40);
+    $('#docswindow').addClass('active');
+    ensureTaskbarTab('docswindow', 'KYWY Docs');
+    setTimeout(function() {
+        bringToFront($('#docswindow'));
+    }, 150);
+    addIframeOverlay('docswindow');
 });
