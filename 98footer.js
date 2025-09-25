@@ -17,7 +17,8 @@ $(document).on('mousedown touchstart', function (e) {
 $(function () {
     $(".window.drag.res").draggable({
         handle: ".title-bar",
-        containment: "body",
+        // Allow dragging beyond screen boundaries but keep some part visible
+        containment: [-200, -100, $(window).width() + 200, $(window).height() + 100],
         start: function () {
             bringToFront($(this));
         }
@@ -28,6 +29,12 @@ $(function () {
         start: function () {
             bringToFront($(this));
         }
+    });
+    
+    // Prevent text selection and desktop selection when clicking on windows
+    $(".window").on('mousedown', function(e) {
+        e.stopPropagation(); // Prevent desktop selection
+        bringToFront($(this));
     });
 });
 
@@ -240,6 +247,7 @@ $("#browserbtn").click(function () {
     $(".tbtab").removeClass("active");
     $("#browsertab").fadeIn(40);
     $('#browsertab').addClass("active");
+    bringToFront($('#browser'));
 });
 
 // welcome //
@@ -257,6 +265,7 @@ $("#welcomembtn").click(function () {
     $(".tbtab").removeClass("active");
     $("#welcometab").fadeIn(40);
     $('#welcometab').addClass("active");
+    bringToFront($('#welcome'));
 });
 
 // the team //
@@ -273,6 +282,7 @@ $("#theteambtn").click(function () {
     $(".tbtab").removeClass("active");
     $("#theteamtab").fadeIn(40);
     $('#theteamtab').addClass("active");
+    bringToFront($('#theteam'));
 });
 
 // Legacy calc handlers removed; use the new `#blogwindow` iframe instead
@@ -350,6 +360,7 @@ $("#snakebtn").click(function () {
     $(".tbtab").removeClass("active");
     $("#snaketab").fadeIn(40);
     $('#snaketab').addClass("active");
+    bringToFront($('#snake'));
 });
 
 var canvas = document.getElementById('game');

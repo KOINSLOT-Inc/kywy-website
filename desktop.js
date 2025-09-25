@@ -37,9 +37,12 @@
 
         // Handle drag selection box
         document.addEventListener('mousedown', function(e) {
-            // Only left button and not clicking inside a window or on an icon
+            // Only left button and not clicking inside a window or on an icon or taskbar
             if (e.button !== 0) return;
-            if (e.target.closest('.window') || e.target.closest('.desktop-icon')) return;
+            if (e.target.closest('.window') || 
+                e.target.closest('.desktop-icon') ||
+                e.target.closest('#taskbar') ||
+                e.target.closest('#menu')) return;
 
             isSelecting = true;
             startX = e.clientX; startY = e.clientY;

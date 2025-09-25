@@ -41,7 +41,7 @@ body {
 
     background-repeat: no-repeat;
 
-    cursor: url("images/cursor.jpg"), auto;
+    cursor: default;
 
     padding-top: 60px;
 
@@ -87,7 +87,7 @@ body {
 
     font-family: "Silkscreen", sans-serif;
 
-    cursor: url("images/cursor.jpg"), auto;
+    cursor: default;
 
     position: fixed;
 
@@ -456,7 +456,7 @@ body {
 
     position: fixed;
 
-    z-index: 2199;
+    z-index: 9999; /* Always above all windows */
 
     box-shadow: inset -1px -1px #ffffff, inset 1px 1px #dfdfdf, inset -2px -2px grey, inset 2px 2px #fff;
 
