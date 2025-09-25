@@ -629,3 +629,92 @@ $('#featured-games-desktop-icon').on('click', function () {
     addIframeOverlay('featured-games-window');
 });
 
+// Store window handlers
+$('#storebtn').click(function () {
+    $('#storewindow').fadeIn(40);
+    $('#storewindow').addClass('active');
+    ensureTaskbarTab('storewindow', 'Store');
+    bringToFront($('#storewindow'));
+    addIframeOverlay('storewindow');
+});
+$('#storeclose').on("click", function () {
+    $('#storewindow').removeClass('active');
+    $('#storewindow').fadeOut(40);
+    $('#storewindowtab').remove();
+});
+$('#storemaximize').on("click", function () {
+    const storeWindow = $('#storewindow');
+    if (storeWindow.hasClass('maximized')) {
+        // Restore window
+        storeWindow.removeClass('maximized');
+        storeWindow.css({
+            width: '800px',
+            height: '600px',
+            top: '100px',
+            left: '100px'
+        });
+    } else {
+        // Maximize window
+        storeWindow.addClass('maximized');
+        storeWindow.css({
+            width: '100vw',
+            height: '100vh',
+            top: '0px',
+            left: '0px'
+        });
+    }
+});
+
+// Desktop icon handler for Store
+$('#store-desktop-icon').on('click', function () {
+    $('#storewindow').fadeIn(40);
+    $('#storewindow').addClass('active');
+    ensureTaskbarTab('storewindow', 'Store');
+    bringToFront($('#storewindow'));
+    addIframeOverlay('storewindow');
+});
+
+// PayPal Store window handlers
+$('#paypal-store-btn').click(function () {
+    $('#paypal-store-window').fadeIn(40);
+    $('#paypal-store-window').addClass('active');
+    ensureTaskbarTab('paypal-store-window', 'KYWY Store');
+    bringToFront($('#paypal-store-window'));
+    addIframeOverlay('paypal-store-window');
+});
+$('#paypal-store-close').on("click", function () {
+    $('#paypal-store-window').removeClass('active');
+    $('#paypal-store-window').fadeOut(40);
+    $('#paypal-store-windowtab').remove();
+});
+
+// KYWY Classroom Donate window handlers
+$('#classroom-donate-btn').click(function () {
+    $('#classroom-donate-window').fadeIn(40);
+    $('#classroom-donate-window').addClass('active');
+    ensureTaskbarTab('classroom-donate-window', 'KYWY Classroom');
+    bringToFront($('#classroom-donate-window'));
+    addIframeOverlay('classroom-donate-window');
+});
+$('#classroom-donate-close').on("click", function () {
+    $('#classroom-donate-window').removeClass('active');
+    $('#classroom-donate-window').fadeOut(40);
+    $('#classroom-donate-windowtab').remove();
+});
+
+// Desktop icon handlers for PayPal pages
+$('#paypal-store-desktop-icon').on('click', function () {
+    $('#paypal-store-window').fadeIn(40);
+    $('#paypal-store-window').addClass('active');
+    ensureTaskbarTab('paypal-store-window', 'KYWY Store');
+    bringToFront($('#paypal-store-window'));
+    addIframeOverlay('paypal-store-window');
+});
+
+$('#classroom-donate-desktop-icon').on('click', function () {
+    $('#classroom-donate-window').fadeIn(40);
+    $('#classroom-donate-window').addClass('active');
+    ensureTaskbarTab('classroom-donate-window', 'KYWY Classroom');
+    bringToFront($('#classroom-donate-window'));
+    addIframeOverlay('classroom-donate-window');
+});

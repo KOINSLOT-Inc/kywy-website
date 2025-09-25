@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KYWY Store - PayPal</title>
+    <link rel="stylesheet" href="https://unpkg.com/98.css@0.1.4/build/98.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Silkscreen&display=swap">
+    <style>
+        body {
+            font-family: 'Silkscreen', monospace;
+            background: #c0c0c0;
+            margin: 20px;
+            padding: 20px;
+        }
+        .store-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border: 2px inset #c0c0c0;
+        }
+        h1 {
+            color: #000080;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .product-info {
+            margin-bottom: 30px;
+            padding: 15px;
+            background: #f0f0f0;
+            border: 1px inset #c0c0c0;
+        }
+        .paypal-container {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: #e8e8e8;
+            border: 2px inset #c0c0c0;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #000080;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="store-container">
+        <h1>🎮 KYWY Store</h1>
+        
+        <div class="product-info">
+            <h3>KYWY - Retro Gaming & Development Platform</h3>
+            <p>The compact retro handheld with endless development potential.</p>
+            <ul>
+                <li>All day battery life</li>
+                <li>RP2040 chipset</li>
+                <li>USB-C connectivity</li>
+                <li>Micro SD storage</li>
+                <li>Full expandability</li>
+            </ul>
+        </div>
+
+        <div class="paypal-container">
+            <h3>Purchase KYWY</h3>
+            <p>Secure payment via PayPal</p>
+            
+            <script 
+              src="https://www.paypal.com/sdk/js?client-id=BAAVg8VyZHSr5c7wdOq6wDcKXVhuqOeWxqormZGepO98lE9H3WfVS0SA4ZRZEMy2g9ApqeST8bzwftQnAI&components=hosted-buttons&enable-funding=venmo&currency=USD">
+            </script>
+
+            <div id="paypal-container-MMWUFDHZ5ACHQ"></div>
+            <script>
+              paypal.HostedButtons({
+                hostedButtonId: "MMWUFDHZ5ACHQ",
+              }).render("#paypal-container-MMWUFDHZ5ACHQ")
+            </script>
+        </div>
+
+        <div style="text-align: center;">
+            <p><small>Powered by PayPal - The safer, easier way to pay online!</small></p>
+        </div>
+    </div>
+</body>
+</html>

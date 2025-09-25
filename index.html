@@ -103,6 +103,14 @@
         <div class="emoji-icon">🎮</div>
         <div class="icon-label">Games</div>
     </div>
+    <div class="desktop-icon" id="paypal-store-desktop-icon">
+        <div class="emoji-icon">🛒</div>
+        <div class="icon-label">KYWY Store</div>
+    </div>
+    <div class="desktop-icon" id="classroom-donate-desktop-icon">
+        <div class="emoji-icon">🎓</div>
+        <div class="icon-label">KYWY Classroom</div>
+    </div>
 </div>
 
 <!-- Selection Box -->
@@ -383,6 +391,8 @@
         <button class="tbtab" id="githubtab" style="display:none;"><span>Github</span></button>
         <button class="tbtab" id="contcttab" style="display:none;"><span>Community</span></button>
         <button class="tbtab" id="privacytab" style="display:none;"><span>Privacy Policy</span></button>
+        <button class="tbtab" id="paypal-store-tab" style="display:none;"><span>KYWY Store</span></button>
+        <button class="tbtab" id="classroom-donate-tab" style="display:none;"><span>KYWY Classroom</span></button>
     </div>
     <div id="time">
         <span id="time-s">12:02</span>
@@ -434,6 +444,13 @@
         </li>
         <li class="ui-menu-item" id="featured-games-btn" style=" font-size: 14px;">
             <div class="ui-menu-item-wrapper">🎮 Games</div>
+        </li>
+        <hr>
+        <li class="ui-menu-item" id="paypal-store-btn" style=" font-size: 14px;">
+            <div class="ui-menu-item-wrapper">🛒 KYWY Store</div>
+        </li>
+        <li class="ui-menu-item" id="classroom-donate-btn" style=" font-size: 14px;">
+            <div class="ui-menu-item-wrapper">🎓 KYWY in the Classroom</div>
         </li>
     </ul>
     <!-- end menu -->
@@ -513,6 +530,30 @@
     </div>
     <div class="window-body" style="height: 740px; padding: 0; overflow: hidden;">
         <iframe src="featured-games.html" style="width:100%; height:100%; border:none; overflow: auto;"></iframe>
+    </div>
+</div>
+<!-- PayPal Store Window -->
+<div class="window drag res" id="paypal-store-window" style="display: none; width: 700px; height: 600px; top: 100px; left: 100px;">
+    <div class="title-bar">
+        <div class="title-bar-text">KYWY Store</div>
+        <div class="title-bar-controls">
+            <button aria-label="Close" id="paypal-store-close"></button>
+        </div>
+    </div>
+    <div class="window-body" style="height: 540px; padding: 0; overflow: hidden;">
+        <iframe src="paypal-store.html" style="width:100%; height:100%; border:none; overflow: auto;"></iframe>
+    </div>
+</div>
+<!-- KYWY Classroom Donate Window -->
+<div class="window drag res" id="classroom-donate-window" style="display: none; width: 750px; height: 650px; top: 120px; left: 120px;">
+    <div class="title-bar">
+        <div class="title-bar-text">KYWY in the Classroom</div>
+        <div class="title-bar-controls">
+            <button aria-label="Close" id="classroom-donate-close"></button>
+        </div>
+    </div>
+    <div class="window-body" style="height: 590px; padding: 0; overflow: hidden;">
+        <iframe src="kywy-classroom-donate.html" style="width:100%; height:100%; border:none; overflow: auto;"></iframe>
     </div>
 </div>
     <!-- end menu closing cleaned up earlier -->
