@@ -80,10 +80,145 @@ $(function () {
             }
         }, 10);
     });
+    
+    // Auto-activate iframes when they finish loading
+    $('.window iframe').on('load', function() {
+        var $iframe = $(this);
+        var $window = $iframe.closest('.window');
+        
+        // If this window is currently active, simulate the activation click
+        if ($window.hasClass('active')) {
+            setTimeout(function() {
+                try {
+                    // Simulate click to fully activate the iframe
+                    var rect = $iframe[0].getBoundingClientRect();
+                    var centerX = rect.left + (rect.width / 2);
+                    var centerY = rect.top + (rect.height / 2);
+                    
+                    var clickEvent = new MouseEvent('click', {
+                        view: window,
+                        bubbles: true,
+                        cancelable: true,
+                        clientX: centerX,
+                        clientY: centerY,
+                        button: 0
+                    });
+                    
+                    $iframe[0].dispatchEvent(clickEvent);
+                    $iframe[0].focus();
+                    
+                    if ($iframe[0].contentWindow) {
+                        $iframe[0].contentWindow.focus();
+                    }
+                } catch(e) {
+                    console.log('Auto-activation failed:', e.message);
+                }
+            }, 50);
+        }
+    });
 });
 
 var activetab = "";
 var topZ = 3000; // base z-index for windows
+
+// Enhanced window opening function for immediate interactivity
+function openWindowWithFocus($window, tabName) {
+    // Show the window immediately
+    $window.fadeIn(40);
+    $window.addClass('active');
+    
+    // Ensure taskbar tab
+    if (typeof ensureTaskbarTab === 'function') {
+        ensureTaskbarTab($window.attr('id'), tabName);
+    }
+    
+    // Immediate focus - don't wait
+    bringToFront($window);
+    
+    // Additional immediate focusing for iframes with simulated click
+    var $iframe = $window.find('iframe');
+    if ($iframe.length) {
+        // Set iframe to be immediately interactive
+        $iframe.css({
+            'pointer-events': 'auto',
+            'z-index': '10'
+        });
+        $iframe.attr('tabindex', '0');
+        
+        // Simulate the initial click that browsers need for iframe interaction
+        setTimeout(function() {
+            try {
+                // Get the center of the iframe to click
+                var rect = $iframe[0].getBoundingClientRect();
+                var centerX = rect.left + (rect.width / 2);
+                var centerY = rect.top + (rect.height / 2);
+                
+                // Create and dispatch a synthetic click event at the iframe center
+                var clickEvent = new MouseEvent('click', {
+                    view: window,
+                    bubbles: true,
+                    cancelable: true,
+                    clientX: centerX,
+                    clientY: centerY,
+                    button: 0
+                });
+                
+                $iframe[0].dispatchEvent(clickEvent);
+                
+                // Also try programmatic focus
+                $iframe[0].focus();
+                $iframe.trigger('focus');
+                
+                if ($iframe[0].contentWindow) {
+                    $iframe[0].contentWindow.focus();
+                    
+                    // Try to dispatch click inside the iframe content too
+                    if ($iframe[0].contentDocument) {
+                        var innerClickEvent = new MouseEvent('click', {
+                            view: $iframe[0].contentWindow,
+                            bubbles: true,
+                            cancelable: true,
+                            clientX: 100, // click near top-left of content
+                            clientY: 100,
+                            button: 0
+                        });
+                        $iframe[0].contentDocument.dispatchEvent(innerClickEvent);
+                    }
+                }
+            } catch(e) {
+                console.log('Iframe focus enhancement failed (cross-origin):', e.message);
+            }
+        }, 25); // Very quick timing
+        
+        // Secondary attempt with different approach
+        setTimeout(function() {
+            try {
+                // Alternative: trigger mousedown/mouseup sequence
+                $iframe.trigger('mousedown').trigger('mouseup').trigger('click');
+                $iframe[0].focus();
+                if ($iframe[0].contentWindow) {
+                    $iframe[0].contentWindow.focus();
+                }
+            } catch(e) {}
+        }, 75);
+        
+        // Third attempt - sometimes browsers need multiple tries
+        setTimeout(function() {
+            try {
+                $iframe[0].focus();
+                $iframe[0].click();
+                if ($iframe[0].contentWindow) {
+                    $iframe[0].contentWindow.focus();
+                }
+            } catch(e) {}
+        }, 150);
+    }
+    
+    // Add iframe overlay if function exists
+    if (typeof addIframeOverlay === 'function') {
+        addIframeOverlay($window.attr('id'));
+    }
+}
 
 function bringToFront($win) {
     if (!$win || !$win.length) return;
@@ -110,18 +245,53 @@ function bringToFront($win) {
             $ifr.css('pointer-events', 'auto');
             // Remove click blocker from active window
             $w.find('.click-blocker').remove();
-            // Focus the iframe after a brief delay to ensure it's ready
+            // Aggressive focus for immediate interactivity with simulated click
             setTimeout(function() {
                 try {
+                    // Simulate click on iframe to activate it fully
+                    var rect = $ifr[0].getBoundingClientRect();
+                    var centerX = rect.left + (rect.width / 2);
+                    var centerY = rect.top + (rect.height / 2);
+                    
+                    // Create synthetic click event
+                    var clickEvent = new MouseEvent('click', {
+                        view: window,
+                        bubbles: true,
+                        cancelable: true,
+                        clientX: centerX,
+                        clientY: centerY,
+                        button: 0
+                    });
+                    
+                    $ifr[0].dispatchEvent(clickEvent);
+                    
+                    // Focus the iframe element
                     $ifr[0].focus();
-                    // If we can access the iframe content, focus it too
+                    $ifr[0].scrollIntoView({ behavior: 'instant', block: 'nearest' });
+                    
+                    // Try to focus the iframe content window
                     if ($ifr[0].contentWindow) {
                         $ifr[0].contentWindow.focus();
+                        
+                        // Try to focus the document inside iframe
+                        if ($ifr[0].contentDocument) {
+                            $ifr[0].contentDocument.documentElement.focus();
+                            
+                            // If there's a body, focus that too
+                            if ($ifr[0].contentDocument.body) {
+                                $ifr[0].contentDocument.body.focus();
+                            }
+                        }
                     }
+                    
+                    // Set tabindex to make it focusable
+                    $ifr.attr('tabindex', '0');
+                    
                 } catch(e) {
-                    // Cross-origin iframe, can't focus content but that's okay
+                    // Cross-origin iframe restrictions
+                    console.log('Cross-origin iframe focus limitation:', e.message);
                 }
-            }, 100);
+            }, 25); // Even faster response
         } else {
             // Allow hover and scrolling on inactive windows, but prevent clicks from going through
             $ifr.css('pointer-events', 'auto');
@@ -401,11 +571,7 @@ $('#paintclose').on("click", function () {
 
 $("#paintbtn").click(function () {
     $('#menu').fadeOut(40);
-    $('#paintwindow').fadeIn(40);
-    $('#paintwindow').addClass("active");
-    setTimeout(function() {
-        bringToFront($('#paintwindow'));
-    }, 150);
+    openWindowWithFocus($('#paintwindow'), 'Paint');
 });
 
 // Model3D //
@@ -643,13 +809,8 @@ $('#paintclose').on("click", function () {
 });
 
 $('#calcbtn').click(function () {
-    $('#blogwindow').fadeIn(40);
-    $('#blogwindow').addClass('active');
-    ensureTaskbarTab('blogwindow', 'Blog');
-    setTimeout(function() {
-        bringToFront($('#blogwindow'));
-    }, 150);
-    addIframeOverlay('blogwindow');
+    $('#menu').fadeOut(40);
+    openWindowWithFocus($('#blogwindow'), 'Blog');
 });
 $('#blogclose').on("click", function () {
     $('#blogwindow').removeClass('active');
@@ -673,13 +834,8 @@ $('#githubwindow').on('click', '.title-bar-controls button[aria-label="Close"]',
 });
 
 $('#docsbtn').click(function () {
-    $('#docswindow').fadeIn(40);
-    $('#docswindow').addClass('active');
-    ensureTaskbarTab('docswindow', 'Docs');
-    setTimeout(function() {
-        bringToFront($('#docswindow'));
-    }, 150);
-    addIframeOverlay('docswindow');
+    $('#menu').fadeOut(40);
+    openWindowWithFocus($('#docswindow'), 'KYWY Docs');
 });
 // Discord
 $('#contactbtn').click(function () {
@@ -704,14 +860,8 @@ $('#privacywindowclose').on("click", function () {
 });
 
 $('#featured-games-btn').click(function () {
-    $('#featured-games-window').fadeIn(40);
-    $('#featured-games-window').addClass('active');
-    ensureTaskbarTab('featured-games-window', 'Games');
-    // Delay the focus to ensure iframe is loaded
-    setTimeout(function() {
-        bringToFront($('#featured-games-window'));
-    }, 150);
-    addIframeOverlay('featured-games-window');
+    $('#menu').fadeOut(40);
+    openWindowWithFocus($('#featured-games-window'), 'Games');
 });
 $('#featured-games-close').on("click", function () {
     $('#featured-games-window').removeClass('active');
@@ -775,14 +925,8 @@ $('#store-desktop-icon').on('click', function () {
 
 // PayPal Store window handlers
 $('#paypal-store-btn').click(function () {
-    $('#paypal-store-window').fadeIn(40);
-    $('#paypal-store-window').addClass('active');
-    ensureTaskbarTab('paypal-store-window', 'KYWY Store');
-    // Delay the focus to ensure iframe is loaded
-    setTimeout(function() {
-        bringToFront($('#paypal-store-window'));
-    }, 150);
-    addIframeOverlay('paypal-store-window');
+    $('#menu').fadeOut(40);
+    openWindowWithFocus($('#paypal-store-window'), 'KYWY Store');
 });
 $('#paypal-store-close').on("click", function () {
     $('#paypal-store-window').removeClass('active');
@@ -792,14 +936,8 @@ $('#paypal-store-close').on("click", function () {
 
 // KYWY Classroom Donate window handlers
 $('#classroom-donate-btn').click(function () {
-    $('#classroom-donate-window').fadeIn(40);
-    $('#classroom-donate-window').addClass('active');
-    ensureTaskbarTab('classroom-donate-window', 'KYWY in the Classroom');
-    // Delay the focus to ensure iframe is loaded
-    setTimeout(function() {
-        bringToFront($('#classroom-donate-window'));
-    }, 150);
-    addIframeOverlay('classroom-donate-window');
+    $('#menu').fadeOut(40);
+    openWindowWithFocus($('#classroom-donate-window'), 'KYWY in the Classroom');
 });
 $('#classroom-donate-close').on("click", function () {
     $('#classroom-donate-window').removeClass('active');
@@ -809,32 +947,14 @@ $('#classroom-donate-close').on("click", function () {
 
 // Desktop icon handlers for PayPal pages
 $('#paypal-store-desktop-icon').on('click', function () {
-    $('#paypal-store-window').fadeIn(40);
-    $('#paypal-store-window').addClass('active');
-    ensureTaskbarTab('paypal-store-window', 'KYWY Store');
-    setTimeout(function() {
-        bringToFront($('#paypal-store-window'));
-    }, 150);
-    addIframeOverlay('paypal-store-window');
+    openWindowWithFocus($('#paypal-store-window'), 'KYWY Store');
 });
 
 $('#classroom-donate-desktop-icon').on('click', function () {
-    $('#classroom-donate-window').fadeIn(40);
-    $('#classroom-donate-window').addClass('active');
-    ensureTaskbarTab('classroom-donate-window', 'KYWY in the Classroom');
-    setTimeout(function() {
-        bringToFront($('#classroom-donate-window'));
-    }, 150);
-    addIframeOverlay('classroom-donate-window');
+    openWindowWithFocus($('#classroom-donate-window'), 'KYWY in the Classroom');
 });
 
 // KYWY Docs desktop icon handler
 $('#docs-desktop-icon').on('click', function () {
-    $('#docswindow').fadeIn(40);
-    $('#docswindow').addClass('active');
-    ensureTaskbarTab('docswindow', 'KYWY Docs');
-    setTimeout(function() {
-        bringToFront($('#docswindow'));
-    }, 150);
-    addIframeOverlay('docswindow');
+    openWindowWithFocus($('#docswindow'), 'KYWY Docs');
 });
